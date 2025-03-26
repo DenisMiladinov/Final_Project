@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Models
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -21,10 +21,38 @@ namespace Models
             // Fluent API custom configs (if needed)
             modelBuilder.Entity<ApplicationUser>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<Booking>()
+                .HasOne(b => b.User)
+                .WithMany(u => u.Bookings)
+                .HasForeignKey(b => b.UserId);
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.VacationSpot)
+                .WithMany(v => v.Bookings)
+                .HasForeignKey(b => b.SpotId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Payment)
                 .WithOne(p => p.Booking)
                 .HasForeignKey<Payment>(p => p.BookingId);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.Reviews)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.VacationSpot)
+                .WithMany(v => v.Reviews)
+                .HasForeignKey(r => r.SpotId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<VacationSpot>()
+                .HasOne(v => v.Owner)
+                .WithMany(u => u.VacationSpot)
+                .HasForeignKey(v => v.OwnerId);
         }
     }
-
 }
+

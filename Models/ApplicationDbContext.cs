@@ -7,7 +7,7 @@ namespace Models
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public DbSet<ApplicationUser> Users { get; set; }
+        public override DbSet<ApplicationUser> Users { get; set; }
         public DbSet<VacationSpot> VacationSpots { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Booking> Bookings { get; set; }
@@ -18,7 +18,6 @@ namespace Models
         {
             base.OnModelCreating(modelBuilder);
 
-            // Fluent API custom configs (if needed)
             modelBuilder.Entity<ApplicationUser>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.User)

@@ -11,10 +11,20 @@ using System;
            {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Register DbContext with connection string
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.User.RequireUniqueEmail = true;
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             builder.Services.AddControllersWithViews();
                
@@ -44,8 +54,9 @@ using System;
                 var dbContext = services.GetRequiredService<ApplicationDbContext>();
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                var userStore = services.GetRequiredService<IUserStore<ApplicationUser>>();
 
-                await DataSeeder.SeedAsync(dbContext, userManager, roleManager);
+                await DataSeeder.SeedAsync(dbContext, userManager, roleManager, userStore);
             }
 
             app.Run();

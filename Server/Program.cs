@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Server.Repositories;
 using System;
 
    namespace Server
@@ -27,7 +28,16 @@ using System;
                 .AddDefaultTokenProviders();
 
             builder.Services.AddControllersWithViews();
-               
+
+            // Register generic repository
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            // Register specific repository for VacationSpot
+            builder.Services.AddScoped<IVacationSpotRepository, VacationSpotRepository>();
+
+            // Register specific repository for Booking
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+
             builder.Services.AddRazorPages();
 
             var app = builder.Build();

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Final_Project.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Models;
 
 namespace Server.Repositories

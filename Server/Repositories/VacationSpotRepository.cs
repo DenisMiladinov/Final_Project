@@ -1,30 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models;
-using System.Collections.Generic;
+using Server.Repositories;
 
-namespace Server.Repositories
+namespace Final_Project.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class VacationSpotRepository : GenericRepository<VacationSpot>, IVacationSpotRepository
     {
-        protected readonly ApplicationDbContext _context;
-        protected readonly DbSet<T> _dbSet;
+        public VacationSpotRepository(ApplicationDbContext context) : base(context) { }
 
-        public GenericRepository(ApplicationDbContext context)
+        public async Task<IEnumerable<VacationSpot>> GetByLocationAsync(string location)
         {
-            _context = context;
-            _dbSet = context.Set<T>();
+            return await _dbSet
+                .Where(v => v.Location.Contains(location))
+                .ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
-
-        public async Task<T> GetByIdAsync(int id) => await _dbSet.FindAsync(id);
-
-        public async Task AddAsync(T entity) => await _dbSet.AddAsync(entity);
-
-        public void Update(T entity) => _dbSet.Update(entity);
-
-        public void Delete(T entity) => _dbSet.Remove(entity);
-
-        public async Task SaveAsync() => await _context.SaveChangesAsync();
+        public async Task<IEnumerable<VacationSpot>> GetAvailableSpotsAsync(DateTime startDate, DateTime endDate)
+        {
+            return await _dbSet
+                .Where(v => !v.Bookings.Any(b =>
+                    (startDate >= b.StartDate && startDate < b.EndDate) ||
+                    (endDate > b.StartDate && endDate <= b.EndDate)))
+                .Include(v => v.Images)
+                .ToListAsync();
+        }
     }
 }

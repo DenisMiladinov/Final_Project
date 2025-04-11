@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Models;
 
-namespace Server.Repositories
+namespace Services.Repositories
 {
     public class BookingRepository : GenericRepository<Booking>, IBookingRepository
     {

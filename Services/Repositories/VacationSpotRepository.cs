@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models;
-using Server.Repositories;
 
-namespace Final_Project.Repositories
+namespace Services.Repositories
 {
     public class VacationSpotRepository : GenericRepository<VacationSpot>, IVacationSpotRepository
     {

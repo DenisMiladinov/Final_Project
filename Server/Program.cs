@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using Server.Repositories;
+using Services.Repositories;
+using static Services.Services.IVacationSpotServices;
 
 namespace Server
 {
@@ -36,6 +37,8 @@ namespace Server
 
         // Register specific repository for Booking
         builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+
+        builder.Services.AddScoped<IVacationSpotService, VacationSpotService>();
 
         builder.Services.AddRazorPages();
 

@@ -1,4 +1,4 @@
-﻿namespace Server.Repositories
+﻿namespace Services.Repositories
 {
     public interface IGenericRepository<T> where T : class
     {

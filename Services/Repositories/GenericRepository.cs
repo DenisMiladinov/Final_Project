@@ -2,7 +2,7 @@
 using Models;
 
 
-namespace Server.Repositories
+namespace Services.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {

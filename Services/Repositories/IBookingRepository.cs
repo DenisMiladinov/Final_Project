@@ -1,7 +1,7 @@
 ﻿using Models;
 using Server.Repositories;
 
-namespace Final_Project.Repositories
+namespace Services.Repositories
 {
     public interface IBookingRepository : IGenericRepository<Booking>
     {

@@ -1,6 +1,5 @@
 ﻿using Models;
 using Services.Repositories;
-using static Services.Services.IVacationSpotServices;
 
 namespace Services.Services
 {

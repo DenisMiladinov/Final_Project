@@ -1,8 +1,6 @@
 ﻿using Models;
 
-namespace Services.Services;
-
-public class IVacationSpotServices
+namespace Services.Services
 {
     public interface IVacationSpotService
     {

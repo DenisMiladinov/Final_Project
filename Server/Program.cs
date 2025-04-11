@@ -35,6 +35,7 @@ namespace Server
             builder.Services.AddScoped<IVacationSpotService, VacationSpotService>();
             builder.Services.AddScoped<IBookingService, BookingService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddScoped<ISearchService, SearchService>();
             builder.Services.AddRazorPages();
 
             var app = builder.Build();

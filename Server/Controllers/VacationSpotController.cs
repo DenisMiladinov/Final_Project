@@ -13,14 +13,12 @@ namespace Server.Controllers
             _vacationSpotService = vacationSpotService;
         }
 
-        // GET: /VacationSpot/
         public async Task<IActionResult> Index()
         {
             var spots = await _vacationSpotService.GetAllAsync();
             return View(spots);
         }
 
-        // GET: /VacationSpot/Details/5
         public async Task<IActionResult> Details(int id)
         {
             var spot = await _vacationSpotService.GetByIdAsync(id);
@@ -30,13 +28,11 @@ namespace Server.Controllers
             return View(spot);
         }
 
-        // GET: /VacationSpot/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: /VacationSpot/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VacationSpot spot)
@@ -49,7 +45,6 @@ namespace Server.Controllers
             return View(spot);
         }
 
-        // GET: /VacationSpot/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var spot = await _vacationSpotService.GetByIdAsync(id);
@@ -59,7 +54,6 @@ namespace Server.Controllers
             return View(spot);
         }
 
-        // POST: /VacationSpot/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, VacationSpot spot)
@@ -76,7 +70,6 @@ namespace Server.Controllers
             return View(spot);
         }
 
-        // GET: /VacationSpot/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var spot = await _vacationSpotService.GetByIdAsync(id);
@@ -86,7 +79,6 @@ namespace Server.Controllers
             return View(spot);
         }
 
-        // POST: /VacationSpot/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

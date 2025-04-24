@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Models.Booking>
+
+<section class="section__container">
+    <h2 class="section__title">Bookings</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Spot</th>
+                <th>User</th>
+                <th>Dates</th>
+                <th>Guests</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.VacationSpot?.Title</td>
+                    <td>@booking.UserId</td>
+                    <td>@booking.StartDate.ToShortDateString() - @booking.EndDate.ToShortDateString()</td>
+                    <td>@booking.TotalPrice.ToString("0.00") BGN</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

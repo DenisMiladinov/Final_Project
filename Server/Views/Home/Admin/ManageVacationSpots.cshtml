@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Models.VacationSpot>
+
+<section class="section__container">
+    <h2 class="section__title">Vacation Spots</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var spot in Model)
+            {
+                <tr>
+                    <td>@spot.Title</td>
+                    <td>@spot.Location</td>
+                    <td>@spot.PricePerNight BGN</td>
+                    <td>
+                        <a asp-action="EditVacationSpot" asp-route-id="@spot.SpotId" class="btn btn--small">Edit</a>
+                        <a asp-action="DeleteVacationSpot" asp-route-id="@spot.SpotId" class="btn btn--small btn--outline">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

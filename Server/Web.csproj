@@ -23,8 +23,6 @@
   <ItemGroup>
     <Folder Include="Views\Home\Booking\" />
     <Folder Include="Views\Home\Admin\" />
-    <Folder Include="Views\Home\Search\" />
-    <Folder Include="Views\Home\VacationSpot\" />
   </ItemGroup>
 
 </Project>

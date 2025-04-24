@@ -1,0 +1,36 @@
+﻿.vacation-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.vacation-details__wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.vacation-details__image img {
+    max-width: 100%;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.vacation-details__info {
+    flex: 1;
+    min-width: 300px;
+}
+
+.vacation-details__actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.btn--outline {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background: none;
+}

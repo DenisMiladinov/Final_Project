@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models;
-using static Services.Services.IVacationSpotServices;
+using Services.Services;
 
 namespace Server.Controllers
 {

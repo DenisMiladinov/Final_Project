@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Services.Repositories;
 using Services.Services;
+using System;
 
 namespace Server
 {
@@ -42,19 +43,21 @@ namespace Server
 
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=home}/{action=index}/{id?}");
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
-            app.MapRazorPages();
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             using (var scope = app.Services.CreateScope())
             {

@@ -8,17 +8,18 @@ namespace Services.Services
     {
         private readonly IVacationSpotRepository _vacationRepo;
         private readonly IBookingRepository _bookingRepo;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public AdminService(
             IVacationSpotRepository vacationRepo,
             IBookingRepository bookingRepo,
-            UserManager<IdentityUser> userManager)
+            UserManager<ApplicationUser> userManager)
         {
             _vacationRepo = vacationRepo;
             _bookingRepo = bookingRepo;
             _userManager = userManager;
         }
+
 
         public async Task<IEnumerable<VacationSpot>> GetAllVacationSpotsAsync()
         {
@@ -34,5 +35,6 @@ namespace Services.Services
         {
             return await Task.FromResult(_userManager.Users); // Queryable to IEnumerable
         }
+
     }
 }

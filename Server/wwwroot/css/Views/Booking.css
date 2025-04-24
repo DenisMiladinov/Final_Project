@@ -21,3 +21,22 @@
     gap: 1rem;
     margin-top: 1.5rem;
 }
+
+.booking-confirmation .confirmation__details {
+    background-color: #f7f7f7;
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-top: 1rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.confirmation__details p {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+}
+
+.confirmation__actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+}

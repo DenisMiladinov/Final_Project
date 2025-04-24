@@ -1,0 +1,21 @@
+﻿@model Models.Booking
+
+<section class="section__container booking-confirmation">
+    <div class="section__header">
+        <h2 class="section__title">Booking Confirmed</h2>
+        <p class="section__subtitle">Your vacation is officially booked! 🎉</p>
+    </div>
+
+    <div class="confirmation__details">
+        <p><strong>Vacation Spot:</strong> @Model.VacationSpot?.Title</p>
+        <p><strong>Location:</strong> @Model.VacationSpot?.Location</p>
+        <p><strong>Start Date:</strong> @Model.StartDate.ToShortDateString()</p>
+        <p><strong>End Date:</strong> @Model.EndDate.ToShortDateString()</p>
+        <p><strong>Total Price:</strong> @Model.TotalPrice.ToString("0.00") BGN</p>
+    </div>
+
+    <div class="confirmation__actions">
+        <a asp-controller="Booking" asp-action="MyBookings" class="btn">View My Bookings</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn--outline">Back to Home</a>
+    </div>
+</section>

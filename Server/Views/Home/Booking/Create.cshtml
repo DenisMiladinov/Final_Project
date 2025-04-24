@@ -1,0 +1,33 @@
+﻿@model Models.Booking
+
+<section class="section__container booking-form">
+    <div class="section__header">
+        <h2 class="section__title">Book This Vacation Spot</h2>
+        <p class="section__subtitle">Select your dates and confirm your reservation</p>
+    </div>
+
+    <form asp-action="Create" method="post" class="form">
+        <input type="hidden" asp-for="SpotId" />
+
+        <div class="form__group">
+            <label asp-for="StartDate"></label>
+            <input asp-for="StartDate" type="date" class="form__input" />
+            <span asp-validation-for="StartDate" class="form__error"></span>
+        </div>
+
+        <div class="form__group">
+            <label asp-for="EndDate"></label>
+            <input asp-for="EndDate" type="date" class="form__input" />
+            <span asp-validation-for="EndDate" class="form__error"></span>
+        </div>
+
+        <div class="form__actions">
+            <button type="submit" class="btn">Confirm Booking</button>
+            <a asp-controller="VacationSpot" asp-action="Details" asp-route-id="@Model.SpotId" class="btn btn--outline">Cancel</a>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

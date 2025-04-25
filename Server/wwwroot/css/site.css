@@ -20,3 +20,14 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.error__content {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #444;
+}
+
+.section__actions {
+    margin-top: 2rem;
+}

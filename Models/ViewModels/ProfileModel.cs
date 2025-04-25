@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace FinalProject.Server.Models.ApplicationUser;
+namespace Models.ViewModels;
 
 public class ProfileModel
 {

@@ -19,12 +19,17 @@ namespace Models
 
         [ForeignKey("Owner")]
         public string OwnerId { get; set; }
+
         public ApplicationUser Owner { get; set; }
 
-        // Optional link to the user/admin who added it
         public ICollection<Image> Images { get; set; }
+
         public ICollection<Booking> Bookings { get; set; }
+
         public ICollection<Review> Reviews { get; set; }
+
+        public string? ImageUrl { get; set; }
+
     }
 }
 

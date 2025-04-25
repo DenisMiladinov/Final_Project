@@ -1,0 +1,51 @@
+﻿<section class="section__container review-section">
+    <div class="section__header">
+        <h3 class="section__title">Reviews</h3>
+        <p class="section__subtitle">What others are saying</p>
+    </div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form asp-controller="Review" asp-action="Add" method="post" class="form">
+            <input type="hidden" name="SpotId" value="@Model.SpotId" />
+
+            <div class="form__group">
+                <label>Rating (1–5)</label>
+                <input name="Rating" type="number" min="1" max="5" class="form__input" required />
+            </div>
+
+            <div class="form__group">
+                <label>Comment</label>
+                <textarea name="Comment" class="form__input" maxlength="1000"></textarea>
+            </div>
+
+            <button type="submit" class="btn">Submit Review</button>
+        </form>
+    }
+
+    @if (Model.Reviews != null && Model.Reviews.Any())
+    {
+        <div class="review-list">
+            @foreach (var review in Model.Reviews)
+            {
+                <div class="review-item">
+                    <strong>@review.User?.UserName</strong> - <span>@review.Rating ★</span>
+                    <p>@review.Comment</p>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <form asp-controller="Review" asp-action="Delete" method="post" style="margin-top: 0.5rem;">
+                            <input type="hidden" name="id" value="@review.ReviewId" />
+                            <input type="hidden" name="spotId" value="@Model.SpotId" />
+                            <button type="submit" class="btn btn--outline btn--small">Delete</button>
+                        </form>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No reviews yet. Be the first to leave one!</p>
+    }
+</section>

@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.Services;
 
 namespace Server.Controllers
 {
+    [Authorize]
     public class SearchController : Controller
     {
         private readonly ISearchService _searchService;

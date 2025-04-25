@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services.Services;
 
@@ -28,12 +29,14 @@ namespace Server.Controllers
             return View(spot);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VacationSpot spot)
         {
@@ -45,6 +48,7 @@ namespace Server.Controllers
             return View(spot);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var spot = await _vacationSpotService.GetByIdAsync(id);
@@ -55,6 +59,7 @@ namespace Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, VacationSpot spot)
         {
@@ -70,6 +75,7 @@ namespace Server.Controllers
             return View(spot);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var spot = await _vacationSpotService.GetByIdAsync(id);
@@ -80,6 +86,7 @@ namespace Server.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

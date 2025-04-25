@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Security.Claims;
 using Services.Services;
 
 namespace Server.Controllers
 {
+    [Authorize]
     public class BookingController : Controller
     {
         private readonly IBookingService _bookingService;
@@ -47,12 +49,48 @@ namespace Server.Controllers
             return RedirectToAction(nameof(MyBookings));
         }
 
-        // POST: /Booking/Cancel/5
         [HttpPost]
         public async Task<IActionResult> Cancel(int id)
         {
             await _bookingService.CancelBookingAsync(id);
             return RedirectToAction(nameof(MyBookings));
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var booking = await _bookingService.GetByIdAsync(id);
+            if (booking == null) return NotFound();
+            return View(booking);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Booking booking)
+        {
+            if (id != booking.BookingId) return BadRequest();
+            if (!ModelState.IsValid) return View(booking);
+
+            await _bookingService.UpdateAsync(booking);
+            return RedirectToAction("ManageBookings", "Admin");
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var booking = await _bookingService.GetByIdAsync(id);
+            if (booking == null) return NotFound();
+            return View(booking);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _bookingService.DeleteAsync(id);
+            return RedirectToAction("ManageBookings", "Admin");
         }
     }
 }

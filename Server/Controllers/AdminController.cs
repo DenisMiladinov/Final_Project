@@ -62,7 +62,7 @@ namespace Server.Controllers
             return RedirectToAction(nameof(ManageVacationSpots));
         }
 
-        /*public async Task<IActionResult> ManageBookings()
+        public async Task<IActionResult> ManageBookings()
         {
             var bookings = await _bookingService.GetAllAsync();
             return View(bookings);
@@ -81,7 +81,7 @@ namespace Server.Controllers
             if (!ModelState.IsValid) return View(booking);
             await _bookingService.UpdateAsync(booking);
             return RedirectToAction(nameof(ManageBookings));
-        }*/
+        }
 
         public async Task<IActionResult> ManageUsers()
         {

@@ -37,5 +37,25 @@ namespace Services.Services
                 await _bookingRepository.SaveAsync();
             }
         }
+
+        public Task<string?> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(Booking booking)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string?> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

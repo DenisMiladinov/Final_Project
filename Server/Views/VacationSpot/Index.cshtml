@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Models.VacationSpot>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Destinations";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/Views/VacationSpotIndex.css"
+          asp-append-version="true" />
+}
+
+<section class="section__container destination__container">
+    <div class="section__header">
+        <div>
+            <h2 class="section__title">Explore top destinations</h2>
+            <p class="section__subtitle">
+                Discover our most popular vacation spots around the world.
+            </p>
+        </div>
+        <div class="destination__nav">
+            <i class="ri-arrow-left-s-line"></i>
+            <i class="ri-arrow-right-s-line"></i>
+        </div>
+    </div>
+
+    <div class="destination__grid">
+        @foreach (var spot in Model)
+        {
+            <div class="destination__card">
+                <img src="~/assets/@spot.ImageUrl"
+                     alt="@spot.Title"
+                     class="destination__img" />
+                <div class="destination__details">
+                    <p class="destination__title">@spot.Title</p>
+                    <p class="destination__subtitle">@spot.Location</p>
+                </div>
+                <div class="destination__price">
+                    from @String.Format("{0:C}", spot.PricePerNight)
+                </div>
+            </div>
+        }
+    </div>
+</section>

@@ -10,9 +10,37 @@
     <title>Landing Page | ExploreEden</title>
 </head>
 <body>
-    
+    <header id="header-1">
+        <div class="section__container header__container">
+            <div class="header__image">
+                <img src="assets/header-1.jpg" alt="header" />
+                <img src="assets/header-2.jpg" alt="header" />
+            </div>
+            <div class="header__content">
+                <div>
 
-    <section class="section__container destination__container">
+                    <h1>Discover the world one adventure at a time.</h1>
+                    <p class="section__subtitle">
+                        At ExploreEden, we're passionate about making travel accessible
+                        and exciting. Discover comprehensive guides, hidden gems,
+                        and insider tips to inspire your next journey. Explore the beauty,
+                        culture, and diversity of our world—one adventure at a time.
+                    </p>
+                    <div class="action__btns">
+                        <button class="btn">Plan a Trip</button>
+                        <div class="story">
+                            <div class="video__image">
+                                <img src="assets/story.jpg" alt="story" />
+                                <span><i class="ri-play-fill"></i></span>
+                            </div>
+                            <span>Watch our story</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section id="destinations" class="section__container destination__container">
         <div class="section__header">
             <div>
                 <h2 class="section__title">Explore top destinations</h2>
@@ -59,7 +87,7 @@
         </div>
     </section>
 
-    <section class="trip">
+    <section id="pricing" class="trip">
         <div class="section__container trip__container">
             <h2 class="section__title">Best trip package</h2>
             <p class="section__subtitle">
@@ -102,13 +130,11 @@
                     </div>
                 </div>
             </div>
-            <div class="view__all">
-                <button class="btn">View All</button>
-            </div>
+            <div class="view__all"><a asp-controller="VacationSpot" asp-action="Index" class="btn"> View All </a> </div>
         </div>
     </section>
 
-    <section class="gallary">
+    <section id="gallery" class="gallery">
         <div class="section__container gallary__container">
             <div class="image__gallary">
                 <div class="gallary__col">
@@ -153,7 +179,7 @@
         </div>
     </section>
 
-    <footer class="footer">
+    <footer id="contact" class="footer">
         <div class="section__container footer__container">
             <div class="footer__col">
                 <h3>ExploreEden<span>.</span></h3>
@@ -172,11 +198,10 @@
             <div class="footer__col">
                 <h4>Address</h4>
                 <p>
-                    <span>Address:</span> 280 Koregaon Park, Pune, Maharashtra,
-                    India
+                    <span>Address:</span> 280 Koregaon Park, Pune, Maharashtra, India
                 </p>
-                <p><span>Email:</span> info@pathway.com</p>
-                <p><span>Phone:</span> +91 9322823758</p>
+                <p><span>Email:</span> ETOMA@gmail.com</p>
+                <p><span>Phone:</span> +359 887370482</p>
             </div>
         </div>
         <div class="footer__bar">

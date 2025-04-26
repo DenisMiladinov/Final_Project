@@ -1,33 +1,85 @@
 html {
-  font-size: 14px;
+font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+html {
+font-size: 16px;
+}
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+position: relative;
+min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+margin-bottom: 60px;
 }
 
 .error__content {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 1.1rem;
-    color: #444;
+margin-top: 2rem;
+text-align: center;
+font-size: 1.1rem;
+color: #444;
 }
 
 .section__actions {
-    margin-top: 2rem;
+margin-top: 2rem;
+}
+
+nav {
+display: flex;
+align-items: center;
+padding: 0 2rem;
+}
+
+nav .nav__links {
+display: flex;
+flex: 1;
+justify-content: center;
+gap: 2rem;
+list-style: none;
+margin: 0;
+padding: 0;
+}
+
+nav .nav__links a {
+color: #000;
+text-decoration: none;
+font-weight: 500;
+}
+
+nav .nav__links a:hover {
+color: #333;
+}
+
+nav > a.link {
+color: #000;
+text-decoration: none;
+font-weight: 500;
+padding: 0;
+}
+
+nav > a.link:hover {
+color: #333;
+}
+
+nav .contact-link {
+margin-left: auto;
+color: #000;
+text-decoration: none;
+font-weight: 500;
+}
+
+nav .contact-link:hover {
+color: #333;
 }

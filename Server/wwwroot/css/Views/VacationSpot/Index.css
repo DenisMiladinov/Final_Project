@@ -1,0 +1,90 @@
+﻿:root {
+    --primary-color: #3685fb;
+    --secondary-color: #fafcff;
+    --text-dark: #0d213f;
+    --extra-light: #ffffff;
+    --max-width: 1200px;
+}
+
+.section__container {
+    max-width: var(--max-width);
+    margin: auto;
+    padding: 5rem 1rem;
+}
+
+.section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 4rem;
+}
+
+.section__title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.section__subtitle {
+    font-size: 1rem;
+    color: var(--text-dark);
+    max-width: calc(var(--max-width) / 2);
+}
+
+/* new classes for VacationSpot page */
+.destination__grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.destination__card {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+    .destination__card:hover {
+        transform: translateY(-5px);
+    }
+
+/* image */
+.destination__img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+/* overlay text */
+.destination__details {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: var(--extra-light);
+    text-shadow: 0 0 6px rgba(0,0,0,0.6);
+}
+
+.destination__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.destination__subtitle {
+    font-size: 1rem;
+}
+
+/* price badge */
+.destination__price {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background-color: var(--primary-color);
+    color: var(--extra-light);
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+}

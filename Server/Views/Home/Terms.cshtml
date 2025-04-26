@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="~/css/Views/Home/Terms.css" asp-append-version="true" />
 }
 
-<section class="section__container terms">
+<section class="terms section__container">
     <div class="section__header">
         <h2 class="section__title">Terms &amp; Conditions</h2>
         <p class="section__subtitle">
@@ -15,72 +15,123 @@
         </p>
     </div>
 
-    <div class="terms__content">
-        <h3>Introduction</h3>
-        <p>
-            Welcome to ExploreEden. By accessing or using our website and services,
-            you agree to be bound by these Terms &amp; Conditions and our Privacy Policy.
-        </p>
+    <div class="terms__list">
+        <div class="terms__item">
+            <button type="button" class="terms__question">Introduction</button>
+            <div class="terms__answer">
+                <p>
+                    Welcome to ExploreEden. By accessing or using our website and services,
+                    you agree to be bound by these Terms &amp; Conditions and our Privacy Policy.
+                </p>
+            </div>
+        </div>
 
-        <h3>Bookings</h3>
-        <p>
-            All bookings are subject to availability. When you complete a reservation
-            through our platform, a contract is formed directly between you and the
-            accommodation provider. You agree to pay all charges associated with your booking.
-        </p>
+        <div class="terms__item">
+            <button type="button" class="terms__question">Bookings</button>
+            <div class="terms__answer">
+                <p>
+                    All bookings are subject to availability. When you complete a reservation
+                    through our platform, a contract is formed directly between you and the
+                    accommodation provider. You agree to pay all charges associated with your booking.
+                </p>
+            </div>
+        </div>
 
-        <h3>Payments &amp; Fees</h3>
-        <p>
-            We use Stripe to process payments. You must provide valid payment information
-            at the time of booking. Any service fees, taxes, or additional charges imposed
-            by the provider will be displayed prior to confirmation.
-        </p>
+        <div class="terms__item">
+            <button type="button" class="terms__question">Payments &amp; Fees</button>
+            <div class="terms__answer">
+                <p>
+                    We use Stripe to process payments. You must provide valid payment information
+                    at the time of booking. Any service fees, taxes, or additional charges imposed
+                    by the provider will be displayed prior to confirmation.
+                </p>
+            </div>
+        </div>
 
-        <h3>Cancellations &amp; Refunds</h3>
-        <p>
-            Cancellation policies vary by property. Please review the specific cancellation
-            terms on your booking confirmation. Refunds, if applicable, will be processed
-            according to those terms; service fees may be non–refundable.
-        </p>
+        <div class="terms__item">
+            <button type="button" class="terms__question">Cancellations &amp; Refunds</button>
+            <div class="terms__answer">
+                <p>
+                    Cancellation policies vary by property. Please review the specific cancellation
+                    terms on your booking confirmation. Refunds, if applicable, will be processed
+                    according to those terms; service fees may be non–refundable.
+                </p>
+            </div>
+        </div>
 
-        <h3>User Accounts</h3>
-        <p>
-            You must register and log in to manage your bookings. Keep your credentials secure.
-            You are responsible for all activity on your account.
-        </p>
+        <div class="terms__item">
+            <button type="button" class="terms__question">User Accounts</button>
+            <div class="terms__answer">
+                <p>
+                    You must register and log in to manage your bookings. Keep your credentials secure.
+                    You are responsible for all activity on your account.
+                </p>
+            </div>
+        </div>
 
-        <h3>Reviews &amp; Conduct</h3>
-        <p>
-            We encourage honest reviews of your experience. Abusive, defamatory, or
-            fraudulent content is strictly prohibited. We reserve the right to remove any
-            reviews that violate these Terms.
-        </p>
+        <div class="terms__item">
+            <button type="button" class="terms__question">Reviews &amp; Conduct</button>
+            <div class="terms__answer">
+                <p>
+                    We encourage honest reviews of your experience. Abusive, defamatory, or
+                    fraudulent content is strictly prohibited. We reserve the right to remove any
+                    reviews that violate these Terms.
+                </p>
+            </div>
+        </div>
 
-        <h3>Intellectual Property</h3>
-        <p>
-            All content on this site, including text, graphics, logos, and images, is owned
-            by ExploreEden or its licensors and is protected by copyright and trademark laws.
-        </p>
+        <div class="terms__item">
+            <button type="button" class="terms__question">Intellectual Property</button>
+            <div class="terms__answer">
+                <p>
+                    All content on this site, including text, graphics, logos, and images, is owned
+                    by ExploreEden or its licensors and is protected by copyright and trademark laws.
+                </p>
+            </div>
+        </div>
 
-        <h3>Limitation of Liability</h3>
-        <p>
-            ExploreEden acts as an intermediary only. We are not responsible for the acts
-            or omissions of accommodation providers. To the fullest extent permitted by law,
-            our liability is limited to the amount you paid in service fees.
-        </p>
+        <div class="terms__item">
+            <button type="button" class="terms__question">Limitation of Liability</button>
+            <div class="terms__answer">
+                <p>
+                    ExploreEden acts as an intermediary only. We are not responsible for the acts
+                    or omissions of accommodation providers. To the fullest extent permitted by law,
+                    our liability is limited to the amount you paid in service fees.
+                </p>
+            </div>
+        </div>
 
-        <h3>Governing Law</h3>
-        <p>
-            These Terms shall be governed by and construed in accordance with the laws of
-            the jurisdiction in which ExploreEden is registered, without regard to conflict
-            of law principles.
-        </p>
+        <div class="terms__item">
+            <button type="button" class="terms__question">Governing Law</button>
+            <div class="terms__answer">
+                <p>
+                    These Terms shall be governed by and construed in accordance with the laws of
+                    the jurisdiction in which ExploreEden is registered, without regard to conflict
+                    of law principles.
+                </p>
+            </div>
+        </div>
 
-        <h3>Changes to Terms</h3>
-        <p>
-            We may update these Terms from time to time. The “Last Updated” date at the top
-            of this page indicates when changes were made. Continued use of the site after
-            modifications constitutes your acceptance of the new Terms.
-        </p>
+        <div class="terms__item">
+            <button type="button" class="terms__question">Changes to Terms</button>
+            <div class="terms__answer">
+                <p>
+                    We may update these Terms from time to time. The “Last Updated” date at the top
+                    of this page indicates when changes were made. Continued use of the site after
+                    modifications constitutes your acceptance of the new Terms.
+                </p>
+            </div>
+        </div>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.terms__question').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = btn.closest('.terms__item');
+                item.classList.toggle('open');
+            });
+        });
+    </script>
+}

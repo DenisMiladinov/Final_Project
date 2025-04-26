@@ -63,7 +63,7 @@ namespace Server
                         Description = "Relax in a luxury villa right on the Black Sea coast.",
                         Location = "Sozopol, Bulgaria",
                         PricePerNight = 450.00M,
-                        Images = new List<Image> { new Image { ImageUrl = "/images/villa1.jpg" } },
+                        Images = new List<Image> { new Image { ImageUrl = "/story.jpg" } },
                         OwnerId = user.Id
                     },
                     new VacationSpot
@@ -72,7 +72,7 @@ namespace Server
                         Description = "A cozy cabin near the ski slopes of Bansko.",
                         Location = "Bansko, Bulgaria",
                         PricePerNight = 280.00M,
-                        Images = new List<Image> { new Image { ImageUrl = "/images/cabin1.jpg" } },
+                        Images = new List<Image> { new Image { ImageUrl = "/assets/story.jpg" } },
                         OwnerId = user.Id
                     },
                     new VacationSpot
@@ -81,7 +81,7 @@ namespace Server
                         Description = "Modern apartment in the center of Sofia.",
                         Location = "Sofia, Bulgaria",
                         PricePerNight = 320.00M,
-                        Images = new List<Image> { new Image { ImageUrl = "/images/loft1.jpg" } },
+                        Images = new List<Image> { new Image { ImageUrl = "/assets/story.jpg" } },
                         OwnerId = user.Id
                     },
                     new VacationSpot
@@ -90,7 +90,7 @@ namespace Server
                         Description = "Quiet retreat with a view of Batak Lake.",
                         Location = "Batak, Bulgaria",
                         PricePerNight = 220.00M,
-                        Images = new List<Image> { new Image { ImageUrl = "/images/cottage1.jpg" } },
+                        Images = new List<Image> { new Image { ImageUrl = "/assets/story.jpg" } },
                         OwnerId = user.Id
                     },
                     new VacationSpot
@@ -99,7 +99,7 @@ namespace Server
                         Description = "Stay in a sustainable bungalow surrounded by forest.",
                         Location = "Velingrad, Bulgaria",
                         PricePerNight = 190.00M,
-                        Images = new List<Image> { new Image { ImageUrl = "/images/bungalow1.jpg" } },
+                        Images = new List<Image> { new Image { ImageUrl = "/assets/story.jpg" } },
                         OwnerId = user.Id
                     },
                     new VacationSpot
@@ -108,7 +108,7 @@ namespace Server
                         Description = "Sunny and peaceful home in a quiet Rhodope village.",
                         Location = "Smolyan, Bulgaria",
                         PricePerNight = 210.00M,
-                        Images = new List<Image> { new Image { ImageUrl = "/images/retreat1.jpg" } },
+                        Images = new List<Image> { new Image { ImageUrl = "/assets/story.jpg" } },
                         OwnerId = user.Id
                     },
                     new VacationSpot
@@ -117,7 +117,7 @@ namespace Server
                         Description = "Vintage townhouse close to the old town.",
                         Location = "Plovdiv, Bulgaria",
                         PricePerNight = 250.00M,
-                        Images = new List<Image> { new Image { ImageUrl = "/images/townhouse1.jpg" } },
+                        Images = new List<Image> { new Image { ImageUrl = "/assets/story.jpg" } },
                         OwnerId = user.Id
                     },
                     new VacationSpot
@@ -126,7 +126,7 @@ namespace Server
                         Description = "Panoramic views of cliffs and the sea.",
                         Location = "Kavarna, Bulgaria",
                         PricePerNight = 300.00M,
-                        Images = new List<Image> { new Image { ImageUrl = "/images/apartment1.jpg" } },
+                        Images = new List<Image> { new Image { ImageUrl = "/assets/story.jpg" } },
                         OwnerId = user.Id
                     },
                     new VacationSpot
@@ -135,7 +135,7 @@ namespace Server
                         Description = "Rustic charm surrounded by meadows and hills.",
                         Location = "Veliko Tarnovo, Bulgaria",
                         PricePerNight = 260.00M,
-                        Images = new List<Image> { new Image { ImageUrl = "/images/farmhouse1.jpg" } },
+                        Images = new List<Image> { new Image { ImageUrl = "/assets/story.jpg" } },
                         OwnerId = user.Id
                     },
                     new VacationSpot
@@ -144,7 +144,7 @@ namespace Server
                         Description = "Hit the slopes at Pamporovo right from your door.",
                         Location = "Pamporovo, Bulgaria",
                         PricePerNight = 370.00M,
-                        Images = new List<Image> { new Image { ImageUrl = "/images/chalet1.jpg" } },
+                        Images = new List<Image> { new Image { ImageUrl = "/assets/story.jpg" } },
                         OwnerId = user.Id
                     }
                 };

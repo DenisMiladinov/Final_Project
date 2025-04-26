@@ -17,7 +17,7 @@
 
     <div class="faq__list">
         <div class="faq__item">
-            <button class="faq__question">How do I search for vacation spots?</button>
+            <button type="button" class="faq__question">How do I search for vacation spots?</button>
             <div class="faq__answer">
                 Use the search bar at the top of the Home page to enter your destination,
                 travel dates, and price range, then click “Search” to see available spots.
@@ -25,7 +25,7 @@
         </div>
 
         <div class="faq__item">
-            <button class="faq__question">Can I filter and sort listings?</button>
+            <button type="button" class="faq__question">Can I filter and sort listings?</button>
             <div class="faq__answer">
                 On the Search Results page, you can filter by amenities, price, and rating,
                 and sort by price, distance, or user reviews.
@@ -33,7 +33,7 @@
         </div>
 
         <div class="faq__item">
-            <button class="faq__question">How do I make a booking?</button>
+            <button type="button" class="faq__question">How do I make a booking?</button>
             <div class="faq__answer">
                 Select your desired spot, choose your dates, then proceed through our secure
                 checkout with Stripe to finalize your reservation.
@@ -41,7 +41,7 @@
         </div>
 
         <div class="faq__item">
-            <button class="faq__question">How do I view or cancel my bookings?</button>
+            <button type="button" class="faq__question">How do I view or cancel my bookings?</button>
             <div class="faq__answer">
                 Log in and navigate to your account dashboard. Under “My Bookings” you can
                 view details or cancel according to the cancellation policy.
@@ -56,9 +56,14 @@
           q.addEventListener('click', () => {
             const a = q.nextElementSibling;
             const isOpen = a.style.display === 'block';
-            document.querySelectorAll('.faq__answer')
-                    .forEach(x => x.style.display = 'none');
-            a.style.display = isOpen ? 'none' : 'block';
+
+            document.querySelectorAll('.faq__answer').forEach(x => x.style.display = 'none');
+            document.querySelectorAll('.faq__question').forEach(x => x.classList.remove('active'));
+
+            if (!isOpen) {
+              a.style.display = 'block';
+              q.classList.add('active');
+            }
           });
         });
     </script>

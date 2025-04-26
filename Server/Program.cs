@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Services.Repositories;
 using Services.Services;
-using System;
 
 namespace Server
 {
@@ -26,7 +25,10 @@ namespace Server
                 options.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
+
+
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -60,6 +62,8 @@ namespace Server
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapRazorPages();
 
             using (var scope = app.Services.CreateScope())
             {

@@ -8,5 +8,25 @@ namespace Server.Controllers
         {
             return View();
         }
+
+        public IActionResult FAQs()
+        {
+            return View();
+        }
+
+        public IActionResult Terms()
+        {
+            return View();
+        }
+
+        public IActionResult PrivacyPolicy()
+        {
+            return View();
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
+        }
     }
 }

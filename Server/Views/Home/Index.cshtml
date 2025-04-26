@@ -190,10 +190,12 @@
             </div>
             <div class="footer__col">
                 <h4>Support</h4>
-                <p>FAQs</p>
-                <p>Terms & Conditions</p>
-                <p>Privacy Policy</p>
-                <p>Contact Us</p>
+                <ul class="support__links">
+                    <li><a asp-controller="Home" asp-action="FAQs">FAQs</a></li>
+                    <li><a asp-controller="Home" asp-action="Terms">Terms &amp; Conditions</a></li>
+                    <li><a asp-controller="Home" asp-action="PrivacyPolicy">Privacy Policy</a></li>
+                    <li><a asp-controller="Home" asp-action="Contact">Contact Us</a></li>
+                </ul>
             </div>
             <div class="footer__col">
                 <h4>Address</h4>

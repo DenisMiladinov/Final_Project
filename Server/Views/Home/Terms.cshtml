@@ -127,11 +127,18 @@
 
 @section Scripts {
     <script>
-        document.querySelectorAll('.terms__question').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const item = btn.closest('.terms__item');
-                item.classList.toggle('open');
+        const items = document.querySelectorAll('.terms__item');
+
+        items.forEach(item => {
+          const btn = item.querySelector('.terms__question');
+          btn.addEventListener('click', () => {
+            items.forEach(i => {
+              if (i !== item) {
+                i.classList.remove('open');
+              }
             });
+            item.classList.toggle('open');
+          });
         });
     </script>
 }

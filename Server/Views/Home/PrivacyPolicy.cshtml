@@ -1,5 +1,86 @@
 ﻿@{
+    Layout = "_Layout";
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>Privacy Policy</h1>
-<p>Your privacy policy goes here.</p>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Views/Home/Terms.css" asp-append-version="true" />
+}
+
+<section class="section__container terms privacy">
+    <div class="section__header">
+        <h2 class="section__title">Privacy Policy</h2>
+        <p class="section__subtitle">
+            Your privacy is important to us. Please read this policy to understand how we collect, use, and protect your information.
+        </p>
+    </div>
+
+    <div class="terms__content">
+        <h3>Information We Collect</h3>
+        <p>
+            When you register, book a trip, or otherwise use our services, we collect:
+            <ul>
+                <li>Personal details (name, email, phone number)</li>
+                <li>Booking information (dates, destinations, payment details)</li>
+                <li>Device &amp; usage data (IP address, browser type, pages visited)</li>
+            </ul>
+        </p>
+
+        <h3>How We Use Your Information</h3>
+        <p>
+            We use your data to:
+            <ul>
+                <li>Process and confirm your bookings</li>
+                <li>Communicate with you about your reservations</li>
+                <li>Improve and personalize our services</li>
+                <li>Send you promotional offers (with your consent)</li>
+            </ul>
+        </p>
+
+        <h3>Sharing &amp; Disclosure</h3>
+        <p>
+            We never sell your personal information. We may share it with:
+            <ul>
+                <li>Accommodation providers to complete your booking</li>
+                <li>Third-party payment processors (e.g., Stripe) to process payments</li>
+                <li>Law enforcement or regulators when required by law</li>
+            </ul>
+        </p>
+
+        <h3>Cookies &amp; Tracking</h3>
+        <p>
+            We use cookies and similar technologies to:
+            <ul>
+                <li>Keep you logged in</li>
+                <li>Remember your preferences</li>
+                <li>Analyze site traffic and usage patterns</li>
+            </ul>
+            You can disable cookies in your browser settings, but some features may not work correctly.
+        </p>
+
+        <h3>Data Security</h3>
+        <p>
+            We implement industry-standard measures (encryption, secure servers) to protect your data. However, no system is 100% secure—please keep your account credentials private.
+        </p>
+
+        <h3>Children’s Privacy</h3>
+        <p>
+            Our services are not intended for children under 16. We do not knowingly collect information from minors. If you believe we have done so, please contact us to have it removed.
+        </p>
+
+        <h3>Your Rights</h3>
+        <p>
+            You may:
+            <ul>
+                <li>Access, update, or delete your personal information via your account</li>
+                <li>Opt out of marketing communications at any time</li>
+                <li>Request a copy of the data we hold about you</li>
+            </ul>
+        </p>
+
+        <h3>Changes to This Policy</h3>
+        <p>
+            We may update this policy periodically. The “Last Updated” date at the top indicates when changes were made. Continued use of our site constitutes acceptance of the new terms.
+        </p>
+    </div>
+</section>

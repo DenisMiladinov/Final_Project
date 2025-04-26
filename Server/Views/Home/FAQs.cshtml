@@ -1,5 +1,65 @@
 ﻿@{
+    Layout = "_Layout";
     ViewData["Title"] = "FAQs";
 }
-<h1>Frequently Asked Questions</h1>
-<p>Here’s where you’ll answer all the common questions.</p>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Views/Home/Faqs.css" asp-append-version="true" />
+}
+
+<section class="section__container faq">
+    <div class="section__header">
+        <h2 class="section__title">Frequently Asked Questions</h2>
+        <p class="section__subtitle">
+            Answers to common questions about exploring and booking your perfect getaway.
+        </p>
+    </div>
+
+    <div class="faq__list">
+        <div class="faq__item">
+            <button class="faq__question">How do I search for vacation spots?</button>
+            <div class="faq__answer">
+                Use the search bar at the top of the Home page to enter your destination,
+                travel dates, and price range, then click “Search” to see available spots.
+            </div>
+        </div>
+
+        <div class="faq__item">
+            <button class="faq__question">Can I filter and sort listings?</button>
+            <div class="faq__answer">
+                On the Search Results page, you can filter by amenities, price, and rating,
+                and sort by price, distance, or user reviews.
+            </div>
+        </div>
+
+        <div class="faq__item">
+            <button class="faq__question">How do I make a booking?</button>
+            <div class="faq__answer">
+                Select your desired spot, choose your dates, then proceed through our secure
+                checkout with Stripe to finalize your reservation.
+            </div>
+        </div>
+
+        <div class="faq__item">
+            <button class="faq__question">How do I view or cancel my bookings?</button>
+            <div class="faq__answer">
+                Log in and navigate to your account dashboard. Under “My Bookings” you can
+                view details or cancel according to the cancellation policy.
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.faq__question').forEach(q => {
+          q.addEventListener('click', () => {
+            const a = q.nextElementSibling;
+            const isOpen = a.style.display === 'block';
+            document.querySelectorAll('.faq__answer')
+                    .forEach(x => x.style.display = 'none');
+            a.style.display = isOpen ? 'none' : 'block';
+          });
+        });
+    </script>
+}

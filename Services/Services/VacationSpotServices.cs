@@ -1,57 +1,69 @@
-﻿using Models;
-using Services.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Models;
 
 namespace Services.Services
 {
     public class VacationSpotService : IVacationSpotService
     {
-        private readonly IVacationSpotRepository _vacationSpotRepository;
+        private readonly ApplicationDbContext _context;
 
-        public VacationSpotService(IVacationSpotRepository vacationSpotRepository)
+        public VacationSpotService(ApplicationDbContext context)
         {
-            _vacationSpotRepository = vacationSpotRepository;
+            _context = context;
         }
 
         public async Task<IEnumerable<VacationSpot>> GetAllAsync()
         {
-            return await _vacationSpotRepository.GetAllAsync();
+            return await _context.VacationSpots
+                                 .Include(v => v.Images)
+                                 .ToListAsync();
         }
 
-        public async Task<VacationSpot> GetByIdAsync(int id)
+        public async Task<VacationSpot?> GetByIdAsync(int id)
         {
-            return await _vacationSpotRepository.GetByIdAsync(id);
+            return await _context.VacationSpots
+                                 .Include(v => v.Images)
+                                 .FirstOrDefaultAsync(v => v.SpotId == id);
         }
 
         public async Task CreateAsync(VacationSpot spot)
         {
-            await _vacationSpotRepository.AddAsync(spot);
-            await _vacationSpotRepository.SaveAsync();
+            _context.VacationSpots.Add(spot);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(VacationSpot spot)
         {
-            _vacationSpotRepository.Update(spot);
-            await _vacationSpotRepository.SaveAsync();
+            _context.VacationSpots.Update(spot);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var spot = await _vacationSpotRepository.GetByIdAsync(id);
+            var spot = await _context.VacationSpots.FindAsync(id);
             if (spot != null)
             {
-                _vacationSpotRepository.Delete(spot);
-                await _vacationSpotRepository.SaveAsync();
+                _context.VacationSpots.Remove(spot);
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<VacationSpot>> GetByLocationAsync(string location)
         {
-            return await _vacationSpotRepository.GetByLocationAsync(location);
+            return await _context.VacationSpots
+                                 .Where(v => v.Location.Contains(location))
+                                 .Include(v => v.Images)
+                                 .ToListAsync();
         }
 
         public async Task<IEnumerable<VacationSpot>> GetAvailableSpotsAsync(DateTime startDate, DateTime endDate)
         {
-            return await _vacationSpotRepository.GetAvailableSpotsAsync(startDate, endDate);
+            return await _context.VacationSpots
+                                 .Where(v => !v.Bookings.Any(b =>
+                                       (startDate >= b.StartDate && startDate < b.EndDate) ||
+                                       (endDate > b.StartDate && endDate <= b.EndDate)))
+                                 .Include(v => v.Images)
+                                 .ToListAsync();
         }
     }
 }

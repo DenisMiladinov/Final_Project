@@ -6,8 +6,8 @@
 
 @section Styles {
     <link rel="stylesheet"
-          href="~/css/Views/VacationSpotIndex.css"
-          asp-append-version="true" />
+    href="~/css/Views/VacationSpotIndex.css"
+    asp-append-version="true" />
 }
 
 <section class="section__container destination__container">
@@ -27,17 +27,12 @@
     <div class="destination__grid">
         @foreach (var spot in Model)
         {
-            <div class="destination__card">
-                <img src="~/assets/@spot.ImageUrl"
-                     alt="@spot.Title"
-                     class="destination__img" />
-                <div class="destination__details">
-                    <p class="destination__title">@spot.Title</p>
-                    <p class="destination__subtitle">@spot.Location</p>
-                </div>
-                <div class="destination__price">
-                    from @String.Format("{0:C}", spot.PricePerNight)
-                </div>
+            <div class="vacation-card">
+                <img src="@(Url.Content(spot.Images.First().ImageUrl))" alt="@spot.Title" />
+                     alt="@spot.Title" />
+                <h3>@spot.Title</h3>
+                <p>@spot.Location</p>
+                <p>From @spot.PricePerNight:C</p>
             </div>
         }
     </div>

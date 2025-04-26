@@ -1,0 +1,60 @@
+﻿.privacy .section__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.privacy {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.privacy__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.privacy__item {
+    width: 100%;
+}
+
+.privacy__question {
+    background: none;
+    border: 2px solid #000;
+    border-radius: 9999px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+    .privacy__question:hover {
+        background-color: rgba(0,0,0,0.05);
+    }
+
+.privacy__answer {
+    display: none;
+    padding: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin: 0.5rem auto;
+}
+
+.privacy__item.open .privacy__answer {
+    display: block;
+}
+
+.privacy__item.open .privacy__question {
+    background-color: #000;
+    color: #fff;
+}

@@ -6,5 +6,6 @@ namespace Services.Repositories
     {
         Task<IEnumerable<VacationSpot>> GetByLocationAsync(string location);
         Task<IEnumerable<VacationSpot>> GetAvailableSpotsAsync(DateTime startDate, DateTime endDate);
+        Task<IEnumerable<VacationSpot>> GetAllAsync();
     }
 }

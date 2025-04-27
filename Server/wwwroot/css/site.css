@@ -55,6 +55,8 @@ margin-top: 2rem;
 }
 
 nav {
+    display: flex;
+    align-items: center;
     position: fixed !important;
     top: 0 !important;
     left: 0;
@@ -62,6 +64,7 @@ nav {
     width: 100% !important;
     background-color: #fff !important;
     z-index: 9999 !important;
+
 }
 
 nav .nav__links {
@@ -73,8 +76,9 @@ list-style: none;
 }
 
 nav .nav__auth {
-display: flex;
-gap: 2rem;
+    margin-left: auto;
+    display: flex;
+    gap: 1.5rem;
 }
 
 nav .nav__links a,
@@ -165,4 +169,26 @@ color: #333;
 .plan__btn .btn:hover {
     background: #000;
     color: #fff;
+}
+
+nav {
+    display: flex !important;
+    align-items: center;
+}
+
+    nav .nav__auth {
+        margin-left: auto;
+        display: flex !important;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 1rem;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+nav .nav__auth a,
+nav .nav__auth button {
+    color: #000 !important;
+    text-decoration: none;
+    font-weight: 500;
 }

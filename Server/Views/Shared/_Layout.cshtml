@@ -1,5 +1,8 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+    @using Microsoft.AspNetCore.Identity
+    @inject SignInManager<Models.ApplicationUser> SignInManager
+    @inject UserManager<Models.ApplicationUser> UserManager
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,8 +26,9 @@
 
             <div class="nav__auth">
                 <a asp-controller="Home" asp-action="Index" asp-fragment="Contact" class="link">Contact Us</a>
-                <a asp-area="Identity" asp-page="/Account/Register" class="link">Register</a>
-                <a asp-area="Identity" asp-page="/Account/Login" class="link">Log In</a>
+            <div class="nav__auth">
+                @await Html.PartialAsync("_LoginPartial")
+            </div>
             </div>
         </nav>
         <div class="container-fluid p-0">
@@ -35,7 +39,7 @@
 
         <footer class="border-top footer text-muted">
             <div class="container">
-                &copy; 2025 - Server - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                &copy; 2025 - Etoma - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </div>
         </footer>
 

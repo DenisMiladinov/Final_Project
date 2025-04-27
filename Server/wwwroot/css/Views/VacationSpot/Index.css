@@ -142,3 +142,36 @@
   line-height: 1;
   cursor: pointer;
 }
+
+.vacation-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+}
+
+.vacation-card__price {
+    margin: 0;
+    font-weight: 500;
+}
+
+.btn--deal {
+    display: inline-flex;
+    align-items: center;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background-color .2s;
+}
+
+    .btn--deal i {
+        margin-left: 0.4rem;
+        font-size: 1rem;
+    }
+
+    .btn--deal:hover {
+        background-color: #0056b3;
+    }

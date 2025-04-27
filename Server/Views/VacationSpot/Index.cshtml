@@ -40,7 +40,16 @@
                 <img src="@(Url.Content($"~/assets/Spots/{spot.Images.First().ImageUrl.Split('/').Last()}"))" alt="@spot.Title" />
                 <h3>@spot.Title</h3>
                 <p>@spot.Location</p>
-                <p>From @spot.PricePerNight lv</p>
+                <div class="vacation-card__footer">
+                    <p class="vacation-card__price">From @spot.PricePerNight lv</p>
+                    <a asp-controller="VacationSpot"
+                       asp-action="Details"
+                       asp-route-id="@spot.SpotId"
+                       class="btn--deal">
+                        Check deal <i class="ri-arrow-right-s-line"></i>
+                    </a>>
+                </div>
+
             </div>
         }
     </div>

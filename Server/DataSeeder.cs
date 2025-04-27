@@ -58,7 +58,11 @@ namespace Server
                     Description = "Relax in a luxury villa right on the Black Sea coast.",
                     Location = "Sozopol, Bulgaria",
                     PricePerNight = 450.00M,
-                    Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/villa1.jpg" } },
+                    Images = new List<Image> { 
+                        new Image { ImageUrl = "/assets/Spots/villa1.jpg" },
+                        new Image { ImageUrl = "/assets/Spots/cabin1.jpg" },
+                        new Image { ImageUrl = "/assets/Spots/loft1.jpg" }
+                    },
                     OwnerId = appUser.Id
                 },
                 new VacationSpot

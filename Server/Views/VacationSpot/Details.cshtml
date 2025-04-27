@@ -15,7 +15,9 @@
             <div class="spot-details__thumbs">
                 @foreach (var img in Model.Images)
                 {
-                    <img src="@(Url.Content($"~/assets/Spots/{img.ImageUrl.Split('/').Last()}"))" class="spot-details__thumb" />
+                    <img src="@(Url.Content($"~/assets/Spots/{img.ImageUrl.Split('/').Last()}"))"
+                         class="spot-details__thumb"
+                         data-src="@(Url.Content($"~/assets/Spots/{img.ImageUrl.Split('/').Last()}"))" />
                 }
             </div>
         </div>
@@ -23,7 +25,7 @@
         <div class="spot-details__info">
             <h1 class="spot-details__title">@Model.Title</h1>
             <p class="spot-details__location">@Model.Location</p>
-            <p class="spot-details__price">From @Model.PricePerNight lv per night</p>
+            <p class="spot-details__price">@Model.PricePerNight lv per night</p>
             <a asp-action="Index" asp-controller="VacationSpot" class="btn btn--back">← Back to list</a>
             <a href="#" class="btn btn--book">Book now →</a>
 
@@ -34,3 +36,16 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        (function(){
+            const main = document.querySelector('.spot-details__main-img');
+            document.querySelectorAll('.spot-details__thumb').forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    main.src = thumb.getAttribute('data-src');
+                });
+            });
+        })();
+    </script>
+}

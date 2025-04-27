@@ -32,6 +32,19 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
         </form>
+        <form class="spot-search" method="get" asp-action="Index">
+            <select name="locationFilter"
+                    class="spot-filter__select"
+                    onchange="this.form.submit()">
+                <option value="">All</option>
+                <option value="Bulgaria"
+                        selected="@( (ViewData["CurrentLocationFilter"] as string) == "Bulgaria" )">Bulgaria</option>
+                <option value="Germany"
+                        selected="@( (ViewData["CurrentLocationFilter"] as string) == "Germany" )">Germany</option>
+                <option value="Italy"
+                        selected="@( (ViewData["CurrentLocationFilter"] as string) == "Italy" )">Italy</option>
+            </select>
+        </form>
     </div>
     <div class="destination__grid">
         @foreach (var spot in Model)

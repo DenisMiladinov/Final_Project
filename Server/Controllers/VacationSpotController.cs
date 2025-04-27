@@ -16,20 +16,29 @@ namespace Server.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index(string? search)
+        public async Task<IActionResult> Index(string search, string locationFilter)
         {
+            ViewData["CurrentFilter"] = search;
+            ViewData["CurrentLocationFilter"] = locationFilter;
+
             var spots = await _vacationSpotService.GetAllAsync();
+
             if (!string.IsNullOrWhiteSpace(search))
             {
-                spots = spots
-                    .Where(s => s.Title.Contains(search, StringComparison.OrdinalIgnoreCase)
-                             || s.Location.Contains(search, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-                ViewData["CurrentFilter"] = search;
+                var lower = search.Trim().ToLower();
+                spots = spots.Where(s =>
+                    s.Title.ToLower().Contains(lower) ||
+                    s.Location.ToLower().Contains(lower));
             }
+
+            if (!string.IsNullOrWhiteSpace(locationFilter))
+            {
+                spots = spots.Where(s =>
+                    s.Location.Contains(locationFilter, StringComparison.OrdinalIgnoreCase));
+            }
+
             return View(spots);
         }
-
         public async Task<IActionResult> Details(int id)
         {
             var spot = await _vacationSpotService.GetByIdAsync(id);

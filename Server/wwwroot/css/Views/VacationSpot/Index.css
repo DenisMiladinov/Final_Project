@@ -97,9 +97,11 @@
 }
 
 .spot-search {
-  position: relative;
-  max-width: 400px;
-  margin: 0 auto;
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+    order: 2;
+    margin-left: auto;
 }
 
 .spot-search__input {
@@ -167,13 +169,64 @@
     transition: background-color .2s;
 }
 
-    .btn--deal i {
-        margin-left: 0.4rem;
-        font-size: 1rem;
-    }
+.btn--deal i {
+    margin-left: 0.4rem;
+    font-size: 1rem;
+}
 
-    .btn--deal:hover {
-        background-color: #222;
-        color: #fff;
-        text-decoration: none;
-    }
+.btn--deal:hover {
+    background-color: #222;
+    color: #fff;
+    text-decoration: none;
+}
+
+.spot-filter {
+    display: inline-block;
+    margin-left: 1rem;
+    vertical-align: middle;
+    order: 3;
+}
+
+.spot-filter__select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    border: 2px solid #000;
+    border-radius: 999px;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    padding: 0 1rem;
+    font: inherit;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    text-align: center;
+    text-align-last: center;
+    -ms-text-align-last: center;
+    -moz-text-align-last: center;
+}
+
+
+.spot-filter__select option {
+    text-align: center;
+}
+
+.spot-search__input {
+    border: 2px solid #000;
+    border-radius: 999px;
+    padding: 0 1rem;
+    height: 2.5rem;
+    outline: none;
+    font: inherit;
+    background: transparent;
+    appearance: none;
+}
+
+.search-filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    flex: 1;
+}

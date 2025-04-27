@@ -127,3 +127,42 @@ color: #333;
     color: #fff;
     text-decoration: none;
 }
+
+.view__all {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.view__all .btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background-color .2s;
+}
+
+.view__all .btn:hover {
+    background: #000;
+    color: #fff;
+}
+
+.plan__btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background-color .2s;
+}
+
+.plan__btn .btn:hover {
+    background: #000;
+    color: #fff;
+}

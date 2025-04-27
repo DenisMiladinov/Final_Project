@@ -152,7 +152,11 @@ namespace Server
                     Description = "Explore the valleys and mountain terrain.",
                     Location = "Wasserwerk Freiberg, Germany",
                     PricePerNight = 450.00M,
-                    Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/valleycabin1.jpg" } },
+                    Images = new List<Image> { 
+                        new Image { ImageUrl = "/assets/Spots/valleycabin1.jpg" },
+                        new Image { ImageUrl = "/assets/Spots/cabin1.jpg" },
+                        new Image { ImageUrl = "/assets/Spots/loft1.jpg" }
+                    },
                     OwnerId = appUser.Id
                 },
                 new VacationSpot

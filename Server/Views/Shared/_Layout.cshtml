@@ -1,47 +1,47 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>@ViewData["Title"] - Web</title>
-  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="~/Server.styles.css" asp-append-version="true" />
-  <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-  @RenderSection("Styles", required: false)
-</head>
-<body>
-    <nav>
-        <div class="nav__logo">Etoma</div>
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>@ViewData["Title"] - Web</title>
+      <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+      <link rel="stylesheet" href="~/Server.styles.css" asp-append-version="true" />
+      <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+      @RenderSection("Styles", required: false)
+    </head>
+    <body>
+        <nav>
+            <div class="nav__logo">Etoma</div>
 
-        <ul class="nav__links">
-            <li class="link"><a href="/#Home">Home</a></li>
-            <li class="link"><a asp-controller="Home" asp-action="Index" asp-fragment="Destinations">Destinations</a></li>
-            <li class="link"><a asp-controller="Home" asp-action="Index" asp-fragment="Pricing">Pricing</a></li>
-            <li class="link"><a asp-controller="Home" asp-action="Index" asp-fragment="Gallery">Gallery</a></li>
-        </ul>
+            <ul class="nav__links">
+                <li class="link"><a href="/#Home">Home</a></li>
+                <li class="link"><a asp-controller="Home" asp-action="Index" asp-fragment="Destinations">Destinations</a></li>
+                <li class="link"><a asp-controller="Home" asp-action="Index" asp-fragment="Pricing">Pricing</a></li>
+                <li class="link"><a asp-controller="Home" asp-action="Index" asp-fragment="Gallery">Gallery</a></li>
+            </ul>
 
-        <div class="nav__auth">
-            <a asp-controller="Home" asp-action="Index" asp-fragment="Contact" class="link">Contact Us</a>
-            <a asp-area="Identity" asp-page="/Account/Register" class="link">Register</a>
-            <a asp-area="Identity" asp-page="/Account/Login" class="link">Log In</a>
+            <div class="nav__auth">
+                <a asp-controller="Home" asp-action="Index" asp-fragment="Contact" class="link">Contact Us</a>
+                <a asp-area="Identity" asp-page="/Account/Register" class="link">Register</a>
+                <a asp-area="Identity" asp-page="/Account/Login" class="link">Log In</a>
+            </div>
+        </nav>
+        <div class="container-fluid p-0">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
         </div>
-    </nav>
-    <div class="container-fluid p-0">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Server - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2025 - Server - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
 </html>

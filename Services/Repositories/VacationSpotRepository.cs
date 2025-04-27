@@ -11,6 +11,7 @@ namespace Services.Repositories
         {
             return await _dbSet
                 .Where(v => v.Location.Contains(location))
+                .Include(v => v.Images)
                 .ToListAsync();
         }
 

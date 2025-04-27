@@ -37,11 +37,10 @@
         @foreach (var spot in Model)
         {
             <div class="vacation-card">
-                <img src="@(Url.Content(spot.Images.First().ImageUrl))" alt="@spot.Title" />
-                     alt="@spot.Title" />
+                <img src="@(Url.Content($"~/assets/Spots/{spot.Images.First().ImageUrl.Split('/').Last()}"))" alt="@spot.Title" />
                 <h3>@spot.Title</h3>
                 <p>@spot.Location</p>
-                <p>From @spot.PricePerNight:C</p>
+                <p>From @spot.PricePerNight lv</p>
             </div>
         }
     </div>

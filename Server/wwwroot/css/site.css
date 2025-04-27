@@ -68,11 +68,13 @@ nav {
 }
 
 nav .nav__links {
-display: flex;
-gap: 2rem;
-margin: 0 auto;
-padding: 0;
-list-style: none;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 nav .nav__auth {

@@ -1,51 +1,36 @@
-﻿<section class="section__container review-section">
-    <div class="section__header">
-        <h3 class="section__title">Reviews</h3>
-        <p class="section__subtitle">What others are saying</p>
-    </div>
+﻿@model Models.VacationSpot
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Model.Title;
+}
 
-    @if (User.Identity.IsAuthenticated)
-    {
-        <form asp-controller="Review" asp-action="Add" method="post" class="form">
-            <input type="hidden" name="SpotId" value="@Model.SpotId" />
+@section Styles {
+    <link rel="stylesheet" href="~/css/Views/VacationSpot/Details.css" asp-append-version="true" />
+}
 
-            <div class="form__group">
-                <label>Rating (1–5)</label>
-                <input name="Rating" type="number" min="1" max="5" class="form__input" required />
+<section class="spot-details">
+    <div class="spot-details__container">
+        <div class="spot-details__gallery">
+            <img src="@(Url.Content($"~/assets/Spots/{Model.Images.First().ImageUrl.Split('/').Last()}"))" alt="@Model.Title" class="spot-details__main-img" />
+            <div class="spot-details__thumbs">
+                @foreach (var img in Model.Images)
+                {
+                    <img src="@(Url.Content($"~/assets/Spots/{img.ImageUrl.Split('/').Last()}"))" class="spot-details__thumb" />
+                }
             </div>
-
-            <div class="form__group">
-                <label>Comment</label>
-                <textarea name="Comment" class="form__input" maxlength="1000"></textarea>
-            </div>
-
-            <button type="submit" class="btn">Submit Review</button>
-        </form>
-    }
-
-    @if (Model.Reviews != null && Model.Reviews.Any())
-    {
-        <div class="review-list">
-            @foreach (var review in Model.Reviews)
-            {
-                <div class="review-item">
-                    <strong>@review.User?.UserName</strong> - <span>@review.Rating ★</span>
-                    <p>@review.Comment</p>
-
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <form asp-controller="Review" asp-action="Delete" method="post" style="margin-top: 0.5rem;">
-                            <input type="hidden" name="id" value="@review.ReviewId" />
-                            <input type="hidden" name="spotId" value="@Model.SpotId" />
-                            <button type="submit" class="btn btn--outline btn--small">Delete</button>
-                        </form>
-                    }
-                </div>
-            }
         </div>
-    }
-    else
-    {
-        <p>No reviews yet. Be the first to leave one!</p>
-    }
+
+        <div class="spot-details__info">
+            <h1 class="spot-details__title">@Model.Title</h1>
+            <p class="spot-details__location">@Model.Location</p>
+            <p class="spot-details__price">From @Model.PricePerNight lv per night</p>
+            <a asp-action="Index" asp-controller="VacationSpot" class="btn btn--back">← Back to list</a>
+            <a href="#" class="btn btn--book">Book now →</a>
+
+            <div class="spot-details__description">
+                <h2>Description</h2>
+                <p>@Model.Description</p>
+            </div>
+        </div>
+    </div>
 </section>

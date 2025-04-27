@@ -108,3 +108,22 @@ color: #333;
 .support__links a:hover {
     color: var(--primary-color-dark);
 }
+
+.book__now {
+    display: inline-flex;
+    align-items: center;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background-color .2s;
+}
+
+.book__now:hover,
+.book__now:focus {
+    background-color: #222;
+    color: #fff;
+    text-decoration: none;
+}

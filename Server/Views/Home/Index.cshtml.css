@@ -302,11 +302,22 @@ header {
     background-color: var(--secondary-color);
 }
 
-.trip__container :is(.section__title, .section__subtitle, .view__all) {
+.trip__container :is(.section__title, .section__subtitle) {
     text-align: center;
     margin-right: auto;
     margin-left: auto;
 }
+
+.view__all {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+    .view__all .btn {
+        display: inline-block;
+    }
+
 
 .trip__grid {
     display: grid;

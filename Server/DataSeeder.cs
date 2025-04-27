@@ -99,7 +99,7 @@ namespace Server
                 },
                 new VacationSpot
                 {
-                    Title = "Desert-Inspired Retreat",
+                    Title = "Desert Retreat",
                     Description = "Sunny and peaceful home in a quiet Rhodope village.",
                     Location = "Smolyan, Bulgaria",
                     PricePerNight = 210.00M,
@@ -147,7 +147,7 @@ namespace Server
                     Title = "Valley Cabin",
                     Description = "Explore the valleys and mountain terrain.",
                     Location = "Wasserwerk Freiberg, Germany",
-                    PricePerNight = 350.00M,
+                    PricePerNight = 450.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/valleycabin1.jpg" } },
                     OwnerId = appUser.Id
                 },
@@ -165,17 +165,31 @@ namespace Server
                     Title = "Rural House",
                     Description = "Explore the village of Dolomites.",
                     Location = "The Dolomites, Italy",
-                    PricePerNight = 4500.00M,
+                    PricePerNight = 350.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/ruralhouse1.jpg" } },
                     OwnerId = appUser.Id
                 }
             };
 
-            foreach (var spot in spots)
+            foreach (var seedSpot in spots)
             {
-                if (!await context.VacationSpots.AnyAsync(v => v.Title == spot.Title))
+                var existing = await context.VacationSpots
+                    .Include(v => v.Images)
+                    .FirstOrDefaultAsync(v => v.Title == seedSpot.Title);
+
+                if (existing == null)
                 {
-                    context.VacationSpots.Add(spot);
+                    context.VacationSpots.Add(seedSpot);
+                }
+                else
+                {
+                    existing.Description = seedSpot.Description;
+                    existing.Location = seedSpot.Location;
+                    existing.PricePerNight = seedSpot.PricePerNight;
+
+                    existing.Images.Clear();
+                    foreach (var img in seedSpot.Images)
+                        existing.Images.Add(new Image { ImageUrl = img.ImageUrl });
                 }
             }
 

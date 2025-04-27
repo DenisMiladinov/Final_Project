@@ -37,7 +37,8 @@
         @foreach (var spot in Model)
         {
             <div class="vacation-card">
-                <img src="@(Url.Content($"~/assets/Spots/{spot.Images.First().ImageUrl.Split('/').Last()}"))" alt="@spot.Title" />
+                <img src="@(Url.Content($"~/assets/Spots/{spot.Images.First().ImageUrl.Split('/').Last()}"))" 
+                alt="@spot.Title" />
                 <h3>@spot.Title</h3>
                 <p>@spot.Location</p>
                 <div class="vacation-card__footer">
@@ -46,8 +47,8 @@
                        asp-action="Details"
                        asp-route-id="@spot.SpotId"
                        class="btn--deal">
-                        Check deal <i class="ri-arrow-right-s-line"></i>
-                    </a>>
+                        Check deal →<i class="ri-arrow-right-s-line"></i>
+                    </a>
                 </div>
 
             </div>

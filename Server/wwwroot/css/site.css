@@ -3,9 +3,15 @@ font-size: 14px;
 }
 
 @media (min-width: 768px) {
-html {
-font-size: 16px;
+    html {
+        font-size: 16px;
+    }
 }
+
+header#Home {
+    height: 100vh;
+    background: url("/assets/main_1.jpg") no-repeat;
+    background-size: cover;
 }
 
 .btn:focus,

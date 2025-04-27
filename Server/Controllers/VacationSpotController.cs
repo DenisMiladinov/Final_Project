@@ -16,9 +16,17 @@ namespace Server.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
             var spots = await _vacationSpotService.GetAllAsync();
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                spots = spots
+                    .Where(s => s.Title.Contains(search, StringComparison.OrdinalIgnoreCase)
+                             || s.Location.Contains(search, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+                ViewData["CurrentFilter"] = search;
+            }
             return View(spots);
         }
 

@@ -85,3 +85,50 @@
     border-radius: 0.5rem;
     font-size: 0.875rem;
 }
+
+.spot-search {
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.spot-search__input {
+    width: 100%;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    border: 2px solid #000;
+    border-radius: 9999px;
+    font-size: 1rem;
+    outline: none;
+    padding-right: 3.5rem;
+}
+
+.spot-search__btn {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: #000;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.spot-search__clear {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  color: #000;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}

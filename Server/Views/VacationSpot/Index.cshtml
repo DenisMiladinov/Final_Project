@@ -6,8 +6,8 @@
 
 @section Styles {
     <link rel="stylesheet"
-    href="~/css/Views/VacationSpotIndex.css"
-    asp-append-version="true" />
+          href="~/css/Views/VacationSpot/Index.css"
+          asp-append-version="true" />
 }
 
 <section class="section__container destination__container">
@@ -22,8 +22,17 @@
             <i class="ri-arrow-left-s-line"></i>
             <i class="ri-arrow-right-s-line"></i>
         </div>
+        <form class="spot-search" method="get" asp-action="Index">
+            <input type="text"
+                   name="search"
+                   class="spot-search__input"
+                   placeholder="Type to seach"
+                   value="@(ViewData["CurrentFilter"] ?? "")" />
+            <button type="submit" class="spot-search__btn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
     </div>
-
     <div class="destination__grid">
         @foreach (var spot in Model)
         {
@@ -37,3 +46,18 @@
         }
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        document.querySelector('.spot-search__input').addEventListener('input', function() {
+            const q = this.value.toLowerCase();
+            document.querySelectorAll('.vacation-card').forEach(card => {
+                const txt = (
+                    card.querySelector('h3').textContent +
+                    card.querySelector('p').textContent
+                ).toLowerCase();
+                card.style.display = txt.includes(q) ? '' : 'none';
+            });
+        });
+    </script>
+}

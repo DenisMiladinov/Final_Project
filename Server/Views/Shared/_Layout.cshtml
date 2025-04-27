@@ -24,12 +24,10 @@
                 <li class="link"><a asp-controller="Home" asp-action="Index" asp-fragment="Gallery">Gallery</a></li>
             </ul>
 
-            <div class="nav__auth">
-                <a asp-controller="Home" asp-action="Index" asp-fragment="Contact" class="link">Contact Us</a>
-            <div class="nav__auth">
-                @await Html.PartialAsync("_LoginPartial")
-            </div>
-            </div>
+        <div class="nav__auth">
+            <a asp-controller="Home" asp-action="Index" asp-fragment="Contact" class="link">Contact Us</a>
+            @await Html.PartialAsync("_LoginPartial")
+        </div>
         </nav>
         <div class="container-fluid p-0">
             <main role="main" class="pb-3">

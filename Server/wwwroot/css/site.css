@@ -178,15 +178,15 @@ nav {
     align-items: center;
 }
 
-    nav .nav__auth {
-        margin-left: auto;
-        display: flex !important;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        gap: 1rem;
-        align-items: center;
-        white-space: nowrap;
-    }
+nav .nav__auth {
+    margin-left: auto;
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    align-items: center;
+    white-space: nowrap;
+}
 
 nav .nav__auth a,
 nav .nav__auth button {
@@ -195,8 +195,8 @@ nav .nav__auth button {
     font-weight: 500;
 }
 
-    nav .nav__auth .nav-link {
-        color: #000 !important;
-        text-decoration: none !important;
-        font-weight: 500;
-    }
+nav .nav__auth .nav-link {
+    color: #000 !important;
+    text-decoration: none !important;
+    font-weight: 500;
+}

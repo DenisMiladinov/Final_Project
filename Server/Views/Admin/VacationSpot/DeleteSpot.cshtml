@@ -1,0 +1,23 @@
+﻿@model Models.VacationSpot
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Delete Vacation Spot";
+}
+
+<h1 class="mt-4">Delete Vacation Spot</h1>
+
+<div class="alert alert-warning">
+    <p>Are you sure you want to delete the following spot?</p>
+    <ul>
+        <li><strong>Title:</strong> @Model.Title</li>
+        <li><strong>Location:</strong> @Model.Location</li>
+        <li><strong>Price per Night:</strong> @Model.PricePerNight:C</li>
+    </ul>
+</div>
+
+<form asp-controller="Admin" asp-action="DeleteSpot" method="post">
+    <input type="hidden" asp-for="SpotId" />
+
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-controller="Admin" asp-action="Spots" class="btn btn-secondary ms-2">Cancel</a>
+</form>

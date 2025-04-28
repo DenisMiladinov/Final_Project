@@ -21,6 +21,12 @@
                 <li class="link"><a href="/#Home">Home</a></li>
                 <li class="link"><a asp-controller="Home" asp-action="Index" asp-fragment="Destinations">Destinations</a></li>
                 <li class="link"><a asp-controller="Home" asp-action="Index" asp-fragment="Pricing">Pricing</a></li>
+                @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    <li class="link">
+                        <a asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
+                    </li>
+                }
             </ul>
 
         <div class="nav__auth">

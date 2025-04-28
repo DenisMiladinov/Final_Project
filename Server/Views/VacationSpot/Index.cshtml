@@ -54,6 +54,9 @@
                 alt="@spot.Title" />
                 <h3>@spot.Title</h3>
                 <p>@spot.Location</p>
+                <p class="vacation-card__category">
+                    Category: @spot.Category?.Name
+                </p>
                 <div class="vacation-card__footer">
                     <p class="vacation-card__price">@spot.PricePerNight lv</p>
                     <a asp-controller="VacationSpot"

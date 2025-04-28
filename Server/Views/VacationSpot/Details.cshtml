@@ -25,6 +25,7 @@
         <div class="spot-details__info">
             <h1 class="spot-details__title">@Model.Title</h1>
             <p class="spot-details__location">@Model.Location</p>
+            <p class="spot-details__category">Category: @Model.Category?.Name</p>
             <p class="spot-details__price">@Model.PricePerNight lv per night</p>
             <a asp-action="Index" asp-controller="VacationSpot" class="btn btn--back">← Back to list</a>
             <a asp-controller="Booking"

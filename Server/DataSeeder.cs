@@ -14,7 +14,7 @@ namespace Server
         {
             await context.Database.MigrateAsync();
 
-            string[] roles = { "Admin", "User" };
+            string[] roles = { "Admin", "Receptionist", "User" };
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
@@ -23,32 +23,81 @@ namespace Server
                 }
             }
 
-            if (await userManager.FindByEmailAsync("admin@example.com") == null)
+            var adminEmail = "admin@example.com";
+            var adminPassword = "Admin123!";
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+            if (adminUser == null)
             {
-                var admin = new ApplicationUser
+                adminUser = new ApplicationUser
                 {
-                    UserName = "admin@example.com",
-                    Email = "admin@example.com",
+                    UserName = "Admin",
+                    Email = adminEmail,
                     EmailConfirmed = true
                 };
-                await userManager.CreateAsync(admin, "Admin123!");
-                await userManager.AddToRoleAsync(admin, "Admin");
+
+                var createResult = await userManager.CreateAsync(adminUser, adminPassword);
+                if (!createResult.Succeeded)
+                {
+                    throw new Exception("Failed to create admin user: " +
+                        string.Join("; ", createResult.Errors.Select(e => e.Description)));
+                }
             }
 
-            if (await userManager.FindByEmailAsync("user@example.com") == null)
+            var adminRole = "Admin";
+            if (!await userManager.IsInRoleAsync(adminUser, adminRole))
             {
-                var user = new ApplicationUser();
-                await userStore.SetUserNameAsync(user, "user@example.com", default);
-                await ((IUserEmailStore<ApplicationUser>)userStore)
-                      .SetEmailAsync(user, "user@example.com", default);
-                await ((IUserEmailStore<ApplicationUser>)userStore)
-                      .SetEmailConfirmedAsync(user, true, default);
-                await userManager.CreateAsync(user, "User123!");
-                await userManager.AddToRoleAsync(user, "User");
+                await userManager.AddToRoleAsync(adminUser, adminRole);
             }
 
-            var appUser = await userManager.FindByEmailAsync("user@example.com");
-            if (appUser == null) throw new Exception("User not found");
+            var userEmail = "user@example.com";
+            var appUser = await userManager.FindByEmailAsync(userEmail);
+            if (appUser == null)
+            {
+                appUser = new ApplicationUser
+                {
+                    UserName = "GuestUser",
+                    Email = userEmail,
+                    EmailConfirmed = true
+                };
+                var guestResult = await userManager.CreateAsync(appUser, "User123!");
+                if (!guestResult.Succeeded)
+                    throw new Exception("Failed to create guest user: " + string.Join("; ", guestResult.Errors.Select(e => e.Description)));
+                await userManager.AddToRoleAsync(appUser, "User");
+            }
+
+            var recEmail = "receptionist@example.com";
+            var recUser = await userManager.FindByEmailAsync(recEmail);
+            if (recUser == null) 
+            {
+                recUser = new ApplicationUser
+                {
+                    UserName = "Receptionist",
+                    Email = recEmail,
+                    EmailConfirmed = true
+                };
+                var recResult = await userManager.CreateAsync(recUser, "Reception123!");
+                if (!recResult.Succeeded)
+                    throw new Exception("Failed to create receptionist: " +
+                        string.Join("; ", recResult.Errors.Select(e => e.Description)));
+            }
+            if (!await userManager.IsInRoleAsync(recUser, "Receptionist"))
+            {
+                userManager.AddToRoleAsync(recUser, "Receptionist");
+            }
+
+            if (!context.Categories.Any())
+            {
+                context.Categories.AddRange(new[]
+                {
+                new Category { Name = "Uncategorized" },
+                new Category { Name = "Beach" },
+                new Category { Name = "Mountain" },
+                new Category { Name = "City" }
+                });
+                await context.SaveChangesAsync();
+            }
+
+            var defaultCat = await context.Categories.FirstAsync(c => c.Name == "Uncategorized");
 
             var spots = new List<VacationSpot>
             {
@@ -63,7 +112,8 @@ namespace Server
                         new Image { ImageUrl = "/assets/Spots/cabin1.jpg" },
                         new Image { ImageUrl = "/assets/Spots/loft1.jpg" }
                     },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -72,7 +122,8 @@ namespace Server
                     Location = "Bansko, Bulgaria",
                     PricePerNight = 280.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/cabin1.jpg" } },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -81,7 +132,8 @@ namespace Server
                     Location = "Sofia, Bulgaria",
                     PricePerNight = 320.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/loft1.jpg" } },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -90,7 +142,8 @@ namespace Server
                     Location = "Batak, Bulgaria",
                     PricePerNight = 220.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/cottage1.jpg" } },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -99,7 +152,8 @@ namespace Server
                     Location = "Velingrad, Bulgaria",
                     PricePerNight = 190.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/bungalow1.jpg" } },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -108,7 +162,8 @@ namespace Server
                     Location = "Smolyan, Bulgaria",
                     PricePerNight = 210.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/retreat1.jpg" } },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -117,7 +172,8 @@ namespace Server
                     Location = "Plovdiv, Switzerland",
                     PricePerNight = 250.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/townhouse1.jpg" } },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -126,7 +182,8 @@ namespace Server
                     Location = "Kavarna, Bulgaria",
                     PricePerNight = 300.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/apartment1.jpg" } },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -135,7 +192,8 @@ namespace Server
                     Location = "Veliko Tarnovo, Greece",
                     PricePerNight = 260.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/farmhouse1.jpg" } },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -144,7 +202,8 @@ namespace Server
                     Location = "Pamporovo, Bulgaria",
                     PricePerNight = 370.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/chalet1.jpg" } },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -157,7 +216,8 @@ namespace Server
                         new Image { ImageUrl = "/assets/Spots/cabin1.jpg" },
                         new Image { ImageUrl = "/assets/Spots/loft1.jpg" }
                     },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -166,7 +226,8 @@ namespace Server
                     Location = "Patagonia, Argentina and Chile",
                     PricePerNight = 500.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/mountaincabin1.jpg" } },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 },
                 new VacationSpot
                 {
@@ -175,7 +236,8 @@ namespace Server
                     Location = "The Dolomites, Italy",
                     PricePerNight = 350.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/ruralhouse1.jpg" } },
-                    OwnerId = appUser.Id
+                    OwnerId = appUser.Id,
+                    CategoryId = defaultCat.CategoryId
                 }
             };
 

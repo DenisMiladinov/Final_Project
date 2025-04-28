@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 using Services.Services;
 
@@ -9,11 +11,21 @@ namespace Server.Controllers
     {
         private readonly IVacationSpotService _vacationSpotService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ApplicationDbContext _context;
 
-        public VacationSpotController(IVacationSpotService vacationSpotService, IWebHostEnvironment webHostEnvironment)
+        public VacationSpotController(IVacationSpotService vacationSpotService, IWebHostEnvironment webHostEnvironment, ApplicationDbContext context)
         {
             _vacationSpotService = vacationSpotService;
             _webHostEnvironment = webHostEnvironment;
+            _context = context;
+        }
+
+        private async Task PopulateCategoriesAsync()
+        {
+            var cats = await _context.Categories
+                                      .OrderBy(c => c.Name)
+                                      .ToListAsync();
+            ViewBag.Categories = new SelectList(cats, "CategoryId", "Name");
         }
 
         public async Task<IActionResult> Index(string search, string locationFilter)
@@ -49,8 +61,9 @@ namespace Server.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await PopulateCategoriesAsync();
             return View();
         }
 
@@ -59,6 +72,7 @@ namespace Server.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VacationSpot spot, IFormFile? ImageFile)
         {
+            await PopulateCategoriesAsync();
             if (ModelState.IsValid)
             {
                 if (ImageFile != null && ImageFile.Length > 0)
@@ -76,6 +90,7 @@ namespace Server.Controllers
                     spot.ImageUrl = "/images/" + uniqueFileName;
                 }
 
+                await PopulateCategoriesAsync();
                 await _vacationSpotService.CreateAsync(spot);
                 return RedirectToAction(nameof(Index));
             }
@@ -86,6 +101,7 @@ namespace Server.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
+            await PopulateCategoriesAsync();
             var spot = await _vacationSpotService.GetByIdAsync(id);
             if (spot == null)
                 return NotFound();
@@ -98,6 +114,7 @@ namespace Server.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, VacationSpot spot, IFormFile? ImageFile)
         {
+            await PopulateCategoriesAsync();
             if (id != spot.SpotId)
                 return BadRequest();
 

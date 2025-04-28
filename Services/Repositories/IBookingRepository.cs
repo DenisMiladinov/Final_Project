@@ -1,10 +1,10 @@
 ﻿using Models;
+using Services.Repositories;
 
-namespace Services.Repositories
+public interface IBookingRepository : IGenericRepository<Booking>
 {
-    public interface IBookingRepository : IGenericRepository<Booking>
-    {
-        Task<IEnumerable<Booking>> GetBookingsByUserIdAsync(string userId);
-        Task<bool> IsSpotAvailableAsync(int spotId, DateTime startDate, DateTime endDate);
-    }
+    Task<IEnumerable<Booking>> GetBookingsByUserIdAsync(string userId);
+    Task<bool> IsSpotAvailableAsync(int spotId, DateTime startDate, DateTime endDate);
+
+    Task<IEnumerable<Booking>> GetAllAsync();
 }

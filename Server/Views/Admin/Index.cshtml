@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<section class="section__container">
+    <div class="section__header">
+        <h2 class="section__title">Admin Dashboard</h2>
+        <p class="section__subtitle">Manage your app’s data below</p>
+    </div>
+
+    <div class="dashboard__grid">
+        <a asp-controller="Admin" asp-action="Spots" class="card btn">Manage Vacation Spots</a>
+        <a asp-controller="Admin" asp-action="Bookings" class="card btn">Manage Bookings</a>
+        <a asp-controller="Admin" asp-action="Users" class="card btn">Manage Users</a>
+        <a asp-controller="Categories" asp-action="Index" class="card btn">Manage Categories</a>
+    </div>
+</section>

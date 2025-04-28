@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Models.VacationSpot>
+@{
+    ViewData["Title"] = "Manage Vacation Spots";
+}
+
+<section class="section__container">
+    <div class="section__header">
+        <h2 class="section__title">Manage Vacation Spots</h2>
+        <p class="section__subtitle">All your listings—edit, delete, or add new ones.</p>
+        <p><a asp-area="" asp-controller="Admin" asp-action="CreateSpot" class="btn btn-success mb-3"> + New Spot </a></p>
+
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Location</th>
+                <th>Price / night</th>
+                <th style="white-space: nowrap">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var spot in Model)
+            {
+                <tr>
+                    <td>@spot.Title</td>
+                    <td>@spot.Location</td>
+                    <td>@spot.PricePerNight.ToString("C")</td>
+                    <td>
+                        <a asp-controller="Admin"
+                           asp-action="EditSpot"
+                           asp-route-id="@spot.SpotId"
+                           class="btn btn-sm btn-primary">
+                            Edit
+                        </a>
+                        <a asp-controller="Admin"
+                           asp-action="DeleteSpot"
+                           asp-route-id="@spot.SpotId"
+                           class="btn btn-sm btn-danger">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

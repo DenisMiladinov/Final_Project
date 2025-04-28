@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Models.Booking>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Manage Bookings";
+}
+
+<h1 class="mt-4">Manage Bookings</h1>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Booking ID</th>
+            <th>Spot</th>
+            <th>User</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Total Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            <tr>
+                <td>@booking.BookingId</td>
+                <td>@booking.VacationSpot.Title</td>
+                <td>@booking.User.UserName</td>
+                <td>@booking.StartDate.ToString("yyyy-MM-dd")</td>
+                <td>@booking.EndDate.ToString("yyyy-MM-dd")</td>
+                <td>@booking.TotalPrice.ToString("C")</td>
+                <td>
+                    <a asp-action="EditBooking" asp-route-id="@booking.BookingId" class="btn btn-primary btn-sm">Edit</a>
+                    <a asp-action="DeleteBooking" asp-route-id="@booking.BookingId" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

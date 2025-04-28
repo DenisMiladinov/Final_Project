@@ -1,5 +1,4 @@
 ﻿using Models;
-using Services.Repositories;
 
 namespace Services.Services
 {
@@ -10,6 +9,16 @@ namespace Services.Services
         public BookingService(IBookingRepository bookingRepository)
         {
             _bookingRepository = bookingRepository;
+        }
+
+        public async Task<Booking?> GetByIdAsync(int id)
+        {
+            return await _bookingRepository.GetByIdAsync(id);
+        }
+
+        public async Task<IEnumerable<Booking>> GetAllAsync()
+        {
+            return await _bookingRepository.GetAllAsync();
         }
 
         public async Task<IEnumerable<Booking>> GetBookingsByUserIdAsync(string userId)
@@ -28,6 +37,22 @@ namespace Services.Services
             await _bookingRepository.SaveAsync();
         }
 
+        public async Task UpdateAsync(Booking booking)
+        {
+            _bookingRepository.Update(booking);
+            await _bookingRepository.SaveAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var booking = await _bookingRepository.GetByIdAsync(id);
+            if (booking != null)
+            {
+                _bookingRepository.Delete(booking);
+                await _bookingRepository.SaveAsync();
+            }
+        }
+
         public async Task CancelBookingAsync(int bookingId)
         {
             var booking = await _bookingRepository.GetByIdAsync(bookingId);
@@ -36,26 +61,6 @@ namespace Services.Services
                 _bookingRepository.Delete(booking);
                 await _bookingRepository.SaveAsync();
             }
-        }
-
-        public Task<string?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(Booking booking)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string?> GetAllAsync()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.ViewModels;
@@ -44,12 +45,18 @@ namespace Server.Controllers
 
 
         //---------------------------------------------------SPOTS---------------------------------------------------
-        private async Task PopulateCategoriesAsync()
+        private async Task PopulateCategoriesAsync(int? selectedId = null)
         {
             var cats = await _context.Categories
                                      .OrderBy(c => c.Name)
                                      .ToListAsync();
-            ViewBag.Categories = cats;
+
+            ViewBag.Categories = new SelectList(
+                items: cats,
+                dataValueField: "CategoryId",
+                dataTextField: "Name",
+                selectedValue: selectedId
+            );
         }
         public async Task<IActionResult> Spots()
         {
@@ -66,26 +73,33 @@ namespace Server.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateSpot(VacationSpot m, IFormFile? ImageFile)
         {
-            await PopulateCategoriesAsync();
-            if (!ModelState.IsValid) return View("VacationSpot/CreateSpot", m);
+            await PopulateCategoriesAsync(m.CategoryId);
+
+            if (!ModelState.IsValid)
+                return View("VacationSpot/CreateSpot", m);
+
             await _spotService.CreateAsync(m);
             return RedirectToAction(nameof(Spots));
         }
 
         public async Task<IActionResult> EditSpot(int id)
         {
-            await PopulateCategoriesAsync();
             var m = await _spotService.GetByIdAsync(id);
             if (m == null) return NotFound();
+
+            await PopulateCategoriesAsync(m.CategoryId);
             return View("VacationSpot/EditSpot", m);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSpot(int id, VacationSpot m, IFormFile? ImageFile)
         {
-            await PopulateCategoriesAsync();
+            await PopulateCategoriesAsync(m.CategoryId);
+
             if (id != m.SpotId) return BadRequest();
-            if (!ModelState.IsValid) return View("VacationSpot/EditSpot", m);
+            if (!ModelState.IsValid)
+                return View("VacationSpot/EditSpot", m);
+
             await _spotService.UpdateAsync(m);
             return RedirectToAction(nameof(Spots));
         }

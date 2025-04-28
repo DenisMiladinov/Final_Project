@@ -8,11 +8,12 @@
 
 <form asp-controller="Admin"
       asp-action="EditSpot"
+      asp-route-id="@Model.SpotId"
       method="post"
       enctype="multipart/form-data"
       class="mt-4">
 
-    <input type="hidden" asp-for="SpotId" />
+    <input asp-for="SpotId" type="hidden" />
 
     <div class="mb-3">
         <label asp-for="Title" class="form-label"></label>
@@ -37,14 +38,18 @@
         <input asp-for="PricePerNight" class="form-control" />
         <span asp-validation-for="PricePerNight" class="text-danger"></span>
     </div>
+
     <div class="mb-3">
         <label asp-for="CategoryId" class="form-label">Category</label>
-        <select asp-for="CategoryId" asp-items="@(new SelectList(ViewBag.Categories, "CategoryId", "Name"))"
+        <select asp-for="CategoryId"
+                asp-items="ViewBag.Categories"
                 class="form-select">
             <option value="">-- choose one --</option>
         </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
+
+
     <div class="mb-3">
         <label for="ImageFile" class="form-label">Replace Image</label>
         <input type="file" name="ImageFile" class="form-control" />

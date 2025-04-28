@@ -20,18 +20,33 @@ namespace Server.Controllers
             _context = context;
         }
 
-        private async Task PopulateCategoriesAsync()
+        private async Task PopulateCategoriesAsync(int? selectedId = null)
         {
             var cats = await _context.Categories
-                                      .OrderBy(c => c.Name)
-                                      .ToListAsync();
-            ViewBag.Categories = new SelectList(cats, "CategoryId", "Name");
+                                     .OrderBy(c => c.Name)
+                                     .ToListAsync();
+
+            ViewBag.Categories = new SelectList(
+                items: cats,
+                dataValueField: "CategoryId",
+                dataTextField: "Name",
+                selectedValue: selectedId
+            );
         }
 
-        public async Task<IActionResult> Index(string search, string locationFilter)
+
+        public async Task<IActionResult> Index
+            (
+                string? search,
+                string? locationFilter,
+                int? categoryFilter
+            )
         {
             ViewData["CurrentFilter"] = search;
             ViewData["CurrentLocationFilter"] = locationFilter;
+            ViewData["CurrentCategoryFilter"] = categoryFilter;
+
+            await PopulateCategoriesAsync();
 
             var spots = await _vacationSpotService.GetAllAsync();
 
@@ -47,6 +62,11 @@ namespace Server.Controllers
             {
                 spots = spots.Where(s =>
                     s.Location.Contains(locationFilter, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (categoryFilter.HasValue)
+            {
+                spots = spots.Where(s => s.CategoryId == categoryFilter.Value);
             }
 
             return View(spots);
@@ -102,11 +122,10 @@ namespace Server.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             await PopulateCategoriesAsync();
-            var spot = await _vacationSpotService.GetByIdAsync(id);
-            if (spot == null)
-                return NotFound();
-
-            return View(spot);
+            var m = await _vacationSpotService.GetByIdAsync(id);
+            if (m == null) return NotFound();
+            await PopulateCategoriesAsync(m.CategoryId);
+            return View("VacationSpot/EditSpot", m);
         }
 
         [HttpPost]
@@ -136,7 +155,7 @@ namespace Server.Controllers
                 }
 
                 await _vacationSpotService.UpdateAsync(spot);
-                return RedirectToAction(nameof(Index));
+                return View("VacationSpot/EditSpot", spot);
             }
 
             return View(spot);

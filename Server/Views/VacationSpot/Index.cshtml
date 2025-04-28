@@ -45,6 +45,20 @@
                         selected="@( (ViewData["CurrentLocationFilter"] as string) == "Italy" )">Italy</option>
             </select>
         </form>
+        <form class="spot-search ms-2" method="get" asp-action="Index">
+            <select name="categoryFilter"
+                    class="spot-filter__select"
+                    onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                @foreach (var item in (SelectList)ViewBag.Categories)
+                {
+                    <option value="@item.Value"
+                            selected="@(ViewData["CurrentCategoryFilter"]?.ToString() == item.Value)">
+                        @item.Text
+                    </option>
+                }
+            </select>
+        </form>
     </div>
     <div class="destination__grid">
         @foreach (var spot in Model)
@@ -68,7 +82,7 @@
                 </div>
 
             </div>
-        }
+         }
     </div>
 </section>
 

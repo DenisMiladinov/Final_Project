@@ -27,7 +27,13 @@
             <p class="spot-details__location">@Model.Location</p>
             <p class="spot-details__price">@Model.PricePerNight lv per night</p>
             <a asp-action="Index" asp-controller="VacationSpot" class="btn btn--back">← Back to list</a>
-            <a href="#" class="btn btn--book">Book now →</a>
+            <a asp-controller="Booking"
+               asp-action="Checkout"
+               asp-route-spotId="@Model.SpotId"
+               class="btn btn--book">
+                Book now →
+            </a>
+
 
             <div class="spot-details__description">
                 <h2>Description</h2>

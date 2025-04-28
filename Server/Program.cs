@@ -43,6 +43,9 @@ namespace Server
 
             builder.Services.AddRazorPages();
 
+            var stripeKey = builder.Configuration["Stripe:SecretKey"];
+            Stripe.StripeConfiguration.ApiKey = stripeKey;
+
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())

@@ -1,0 +1,23 @@
+﻿@model Models.VacationSpot
+@inject IConfiguration Configuration
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Complete Your Booking";
+}
+
+<section class="section__container">
+    <h2>Complete payment for “@Model.Title”</h2>
+    <p>Price per night: @Model.PricePerNight:C</p>
+    <button id="checkout-button" class="btn">Pay Now</button>
+</section>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    var stripe = Stripe('@Configuration["Stripe:PublishableKey"]');
+
+    document
+      .getElementById('checkout-button')
+      .addEventListener('click', function() {
+        window.location = '@Url.Action("Checkout", "Booking", new { spotId = Model.SpotId })';
+      });
+</script>

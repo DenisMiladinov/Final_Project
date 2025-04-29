@@ -45,19 +45,21 @@
                         selected="@( (ViewData["CurrentLocationFilter"] as string) == "Italy" )">Italy</option>
             </select>
         </form>
-        <form class="spot-search ms-2" method="get" asp-action="Index">
-            <select name="categoryFilter"
-                    class="spot-filter__select"
-                    onchange="this.form.submit()">
-                <option value="">All Categories</option>
+        <form id="categoryForm" class="spot-search ms-2" method="get" asp-action="Index">
+            <div id="hiddenInputs"></div>
+            <div class="category-tags">
                 @foreach (var item in (SelectList)ViewBag.Categories)
                 {
-                    <option value="@item.Value"
-                            selected="@(ViewData["CurrentCategoryFilter"]?.ToString() == item.Value)">
+                    var id = item.Value;
+                    var isActive = (ViewData["CurrentCategoryFilter"] as int[] ?? new int[0])
+                    .Contains(int.Parse(id));
+                    <button type="button"
+                            data-id="@id"
+                            class="category-tag @(isActive ? "active" : "")">
                         @item.Text
-                    </option>
+                    </button>
                 }
-            </select>
+            </div>
         </form>
     </div>
     <div class="destination__grid">
@@ -98,5 +100,35 @@
                 card.style.display = txt.includes(q) ? '' : 'none';
             });
         });
+    </script>
+    <script>
+        (function(){
+          const form = document.getElementById('categoryForm');
+          const hiddenContainer = document.getElementById('hiddenInputs');
+
+          document.querySelectorAll('.category-tag').forEach(btn => {
+            btn.addEventListener('click', () => {
+              btn.classList.toggle('active');
+
+              // build array of selected IDs
+              const selected = Array.from(
+                document.querySelectorAll('.category-tag.active')
+              ).map(b => b.getAttribute('data-id'));
+
+              // rebuild hidden inputs
+              hiddenContainer.innerHTML = '';
+              selected.forEach(id => {
+                const inp = document.createElement('input');
+                inp.type  = 'hidden';
+                inp.name  = 'categoryFilter'; // MVC will bind this to int[] categoryFilter
+                inp.value = id;
+                hiddenContainer.appendChild(inp);
+              });
+
+              // rerun the search
+              form.submit();
+            });
+          });
+        })();
     </script>
 }

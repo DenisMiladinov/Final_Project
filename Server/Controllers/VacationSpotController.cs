@@ -39,7 +39,7 @@ namespace Server.Controllers
             (
                 string? search,
                 string? locationFilter,
-                int? categoryFilter
+                int[]? categoryFilter
             )
         {
             ViewData["CurrentFilter"] = search;
@@ -64,9 +64,9 @@ namespace Server.Controllers
                     s.Location.Contains(locationFilter, StringComparison.OrdinalIgnoreCase));
             }
 
-            if (categoryFilter.HasValue)
+            if (categoryFilter != null && categoryFilter.Any())
             {
-                spots = spots.Where(s => s.CategoryId == categoryFilter.Value);
+                spots = spots.Where(s => categoryFilter.Contains(s.CategoryId));
             }
 
             return View(spots);

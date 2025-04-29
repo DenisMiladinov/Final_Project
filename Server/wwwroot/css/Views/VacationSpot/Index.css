@@ -207,7 +207,6 @@
     -moz-text-align-last: center;
 }
 
-
 .spot-filter__select option {
     text-align: center;
 }
@@ -230,3 +229,24 @@
     gap: 1rem;
     flex: 1;
 }
+
+.category-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.category-tag {
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    border: 2px solid #000;
+    background: transparent;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+}
+
+    .category-tag.active {
+        background-color: var(--primary-color);
+        color: #fff;
+        border-color: var(--primary-color);
+    }

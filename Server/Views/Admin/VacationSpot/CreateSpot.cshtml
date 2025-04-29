@@ -11,6 +11,8 @@
       method="post"
       enctype="multipart/form-data"
       class="mt-4">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
     <div class="mb-3">
         <label asp-for="Title" class="form-label"></label>
@@ -36,15 +38,16 @@
         <span asp-validation-for="PricePerNight" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="CategoryId" class="form-label">Category</label>
-        <select asp-for="CategoryId" asp-items="@(new SelectList(ViewBag.Categories, "CategoryId", "Name"))"
+        <label asp-for="CategoryId" class="form-label"></label>
+        <select asp-for="CategoryId"
+                asp-items="ViewBag.Categories"
                 class="form-select">
-            <option value="">-- choose one --</option>
+            <option value="" disabled selected>-- choose one --</option>             
         </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label for="ImageFile" class="form-label">Main Image</label>
+        <label class="form-label">Main Image</label>
         <input type="file" name="ImageFile" class="form-control" />
     </div>
 

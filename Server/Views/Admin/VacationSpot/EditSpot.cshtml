@@ -12,8 +12,11 @@
       method="post"
       enctype="multipart/form-data"
       class="mt-4">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
     <input asp-for="SpotId" type="hidden" />
+    <input asp-for="OwnerId" type="hidden" />
 
     <div class="mb-3">
         <label asp-for="Title" class="form-label"></label>
@@ -44,7 +47,7 @@
         <select asp-for="CategoryId"
                 asp-items="ViewBag.Categories"
                 class="form-select">
-            <option value="">-- choose one --</option>
+            <option value="" disabled selected>-- choose one --</option>
         </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>

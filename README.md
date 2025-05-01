@@ -92,9 +92,9 @@ dotnet run --project Server/Server.csproj
 Seeded Users & Roles
 
 Role	Email	Password
-Admin	admin@example.com	Admin123!
-User	user@example.com	User123!
-Receptionist	receptionist@example.com	Reception123!
+Admin	Admin	Admin123!
+User	GuestUser User123!
+Receptionist	Receptionist Reception123!
 
 Live Chat Support
 Users click Chat on their booking details to message receptionists.

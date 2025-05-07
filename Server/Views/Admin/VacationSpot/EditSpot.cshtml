@@ -4,63 +4,58 @@
     ViewData["Title"] = "Edit Vacation Spot";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<form asp-controller="Admin"
-      asp-action="EditSpot"
-      asp-route-id="@Model.SpotId"
-      method="post"
-      enctype="multipart/form-data"
-      class="mt-4">
-    @Html.AntiForgeryToken()
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-    <input asp-for="SpotId" type="hidden" />
-    <input asp-for="OwnerId" type="hidden" />
-
-    <div class="mb-3">
-        <label asp-for="Title" class="form-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+<section class="py-5">
+    <div class="container">
+        <h2 class="display-5 mb-3">@ViewData["Title"]</h2>
+        <p class="text-muted mb-4">Update details of the listing below.</p>
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <form asp-controller="Admin"
+                      asp-action="EditSpot"
+                      asp-route-id="@Model.SpotId"
+                      method="post"
+                      enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="SpotId" type="hidden" />
+                    <input asp-for="OwnerId" type="hidden" />
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">Title</label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Location" class="form-label">Location</label>
+                            <input asp-for="Location" class="form-control" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="PricePerNight" class="form-label">Price Per Night</label>
+                            <input asp-for="PricePerNight" class="form-control" />
+                            <span asp-validation-for="PricePerNight" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="CategoryId" class="form-label">Category</label>
+                        <select asp-for="CategoryId"
+                                asp-items="ViewBag.Categories"
+                                class="form-select"></select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ImageUrl" class="form-label">Replace Image</label>
+                        <input asp-for="ImageUrl" type="file" class="form-control" />
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a asp-controller="Admin" asp-action="Spots" class="btn btn-secondary ms-2">Cancel</a>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Description" class="form-label"></label>
-        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Location" class="form-label"></label>
-        <input asp-for="Location" class="form-control" />
-        <span asp-validation-for="Location" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="PricePerNight" class="form-label"></label>
-        <input asp-for="PricePerNight" class="form-control" />
-        <span asp-validation-for="PricePerNight" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="CategoryId" class="form-label">Category</label>
-        <select asp-for="CategoryId"
-                asp-items="ViewBag.Categories"
-                class="form-select">
-            <option value="" disabled selected>-- choose one --</option>
-        </select>
-        <span asp-validation-for="CategoryId" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label for="ImageFile" class="form-label">Replace Image</label>
-        <input type="file" name="ImageFile" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-    <a asp-controller="Admin" asp-action="Spots" class="btn btn-secondary ms-2">Cancel</a>
-</form>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+</section>

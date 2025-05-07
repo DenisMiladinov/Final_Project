@@ -1,17 +1,47 @@
 ﻿@{
-    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_Layout";
+    ViewData["Title"] = "Dashboard";
 }
 
-<section class="section__container">
-    <div class="section__header">
-        <h2 class="section__title">Admin Dashboard</h2>
-        <p class="section__subtitle">Manage your app’s data below</p>
-    </div>
+@section Styles {
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+}
 
-    <div class="dashboard__grid">
-        <a asp-controller="Admin" asp-action="Spots" class="card btn">Manage Vacation Spots</a>
-        <a asp-controller="Admin" asp-action="Bookings" class="card btn">Manage Bookings</a>
-        <a asp-controller="Admin" asp-action="Users" class="card btn">Manage Users</a>
-        <a asp-controller="Categories" asp-action="Index" class="card btn">Manage Categories</a>
+<section class="py-5 animate__animated animate__fadeIn">
+    <div class="container text-center">
+        <h1 class="display-4 mb-3 animate__animated animate__fadeInDown">
+            Dashboard
+        </h1>
+        <p class="lead mb-4 animate__animated animate__fadeInDown animate__delay-1s">
+            Manage your app’s data below
+        </p>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="list-group">
+                    <a asp-controller="Admin"
+                       asp-action="Spots"
+                       class="list-group-item list-group-item-action animate__animated animate__fadeInUp animate__delay-2s">
+                        Manage Vacation Spots
+                    </a>
+                    <a asp-controller="Admin"
+                       asp-action="Bookings"
+                       class="list-group-item list-group-item-action animate__animated animate__fadeInUp animate__delay-3s">
+                        Manage Bookings
+                    </a>
+                    <a asp-controller="Admin"
+                       asp-action="Users"
+                       class="list-group-item list-group-item-action animate__animated animate__fadeInUp animate__delay-4s">
+                        Manage Users
+                    </a>
+                    <a asp-controller="Categories"
+                       asp-action="Index"
+                       class="list-group-item list-group-item-action animate__animated animate__fadeInUp animate__delay-5s">
+                        Manage Categories
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

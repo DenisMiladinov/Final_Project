@@ -8,14 +8,14 @@ namespace Models.ViewModels
         public int SpotId { get; set; }
 
         [Required]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         [Required]
-        public string Location { get; set; }
+        public string? Location { get; set; }
 
         public string? Description { get; set; }
 
-        [Required]
+        [Required, Range(0.01, double.MaxValue)]
         public decimal PricePerNight { get; set; }
 
         public IFormFile? ImageFile { get; set; }

@@ -6,11 +6,12 @@ namespace Models.ViewModels
     {
         public int SpotId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please choose a rating")]
         [Range(1, 5)]
         public int Rating { get; set; }
 
-        [MaxLength(1000)]
-        public string? Comment { get; set; }
+        [Required(ErrorMessage = "Please leave a comment")]
+        public string Comment { get; set; }
     }
+
 }

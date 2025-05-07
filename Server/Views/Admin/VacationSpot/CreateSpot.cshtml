@@ -4,61 +4,71 @@
     ViewData["Title"] = "Create Vacation Spot";
 }
 
-<h1>@ViewData["Title"]</h1>
+<section class="py-5">
+    <div class="container">
+        <h2 class="display-5 mb-3">@ViewData["Title"]</h2>
+        <p class="text-muted mb-4">Fill out the form below to add a new listing.</p>
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <form asp-controller="Admin"
+                      asp-action="CreateSpot"
+                      method="post"
+                      enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
 
-<form asp-controller="Admin"
-      asp-action="CreateSpot"
-      method="post"
-      enctype="multipart/form-data"
-      class="mt-4">
-    @Html.AntiForgeryToken()
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    @* OwnerId is required by the model; set it in your POST handler or here if you know it *@
+                    <input asp-for="OwnerId" type="hidden" />
 
-    <div class="mb-3">
-        <label asp-for="Title" class="form-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">Title</label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
 
-    <div class="mb-3">
-        <label asp-for="Description" class="form-label"></label>
-        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
 
-    <div class="mb-3">
-        <label asp-for="Location" class="form-label"></label>
-        <input asp-for="Location" class="form-control" />
-        <span asp-validation-for="Location" class="text-danger"></span>
-    </div>
+                    <div class="mb-3">
+                        <label asp-for="Location" class="form-label">Location</label>
+                        <input asp-for="Location" class="form-control" />
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
 
-    <div class="mb-3">
-        <label asp-for="PricePerNight" class="form-label"></label>
-        <input asp-for="PricePerNight" class="form-control" />
-        <span asp-validation-for="PricePerNight" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="CategoryId" class="form-label"></label>
-        <select asp-for="CategoryId"
-                asp-items="ViewBag.Categories"
-                class="form-select">
-            <option value="" disabled selected>-- choose one --</option>             
-        </select>
-        <span asp-validation-for="CategoryId" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Main Image</label>
-        <input type="file" name="ImageFile" class="form-control" />
-    </div>
+                    <div class="mb-3">
+                        <label asp-for="PricePerNight" class="form-label">Price Per Night</label>
+                        <input asp-for="PricePerNight" class="form-control" />
+                        <span asp-validation-for="PricePerNight" class="text-danger"></span>
+                    </div>
 
-    <button type="submit" class="btn btn-primary">Create</button>
-    <a asp-controller="Admin"
-       asp-action="Spots"
-       class="btn btn-secondary ms-2">
-        Cancel
-    </a>
-</form>
+                    <div class="mb-3">
+                        <label asp-for="CategoryId" class="form-label">Category</label>
+                        <select asp-for="CategoryId"
+                                asp-items="ViewBag.Categories"
+                                class="form-select">
+                            <option value="">-- Select a category --</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Main Image</label>
+                        <input type="file" name="ImageFile" class="form-control" />
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary me-2">Create</button>
+                    <a asp-controller="Admin" asp-action="Spots" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

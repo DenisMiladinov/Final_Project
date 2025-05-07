@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Services.Services;
 using Microsoft.AspNetCore.Identity;
 using Stripe.Checkout;
+using Models.ViewModels;
 using Microsoft.Extensions.Configuration;
 
 namespace Server.Controllers
@@ -162,6 +163,12 @@ namespace Server.Controllers
         {
             await _bookingService.DeleteAsync(id);
             return RedirectToAction("ManageBookings", "Admin");
+        }
+        [Authorize]
+        public IActionResult Chat(int bookingId)
+        {
+            var vm = new ChatViewModel { BookingId = bookingId };
+            return View(vm);
         }
     }
 }

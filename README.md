@@ -121,4 +121,8 @@ dotnet publish
 
 Artifact upload
 
+<<<<<<< HEAD
 The main branch is protected to require a passing build.
+=======
+The main branch is protected to require a passing build.
+>>>>>>> 2dc7165519827a99294adb07d75ade285c945b0a

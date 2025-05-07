@@ -1,15 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.ViewModels;
+using Stripe;
 
 namespace Services.Services
 {
     public class VacationSpotService : IVacationSpotService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IReviewService _reviewService;
 
-        public VacationSpotService(ApplicationDbContext context)
+        public VacationSpotService(ApplicationDbContext context, IReviewService reviewService)
         {
             _context = context;
+            _reviewService = reviewService;
         }
 
         public async Task<IEnumerable<VacationSpot>> GetAllAsync()
@@ -66,6 +70,22 @@ namespace Services.Services
                                        (endDate > b.StartDate && endDate <= b.EndDate)))
                                  .Include(v => v.Images)
                                  .ToListAsync();
+        }
+        public async Task<VacationSpotDetailsViewModel> BuildDetailsViewModelAsync(int spotId)
+        {
+            var spot = await GetByIdAsync(spotId);
+            var reviews = await _reviewService.GetBySpotIdAsync(spotId);
+            var avg = await _reviewService.GetAverageRatingAsync(spotId);
+            var count = await _reviewService.GetReviewCountAsync(spotId);
+
+            return new VacationSpotDetailsViewModel
+            {
+                Spot = spot,
+                Reviews = reviews,
+                AverageRating = avg,
+                ReviewCount = count,
+                NewReview = new ReviewViewModel { SpotId = spotId }
+            };
         }
     }
 }

@@ -24,13 +24,39 @@ public class ReviewService : IReviewService
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteReviewAsync(int id)
+    public async Task DeleteReviewAsync(int reviewId)
     {
-        var review = await _context.Reviews.FindAsync(id);
-        if (review != null)
+        var r = await GetByIdAsync(reviewId);
+        if (r != null)
         {
-            _context.Reviews.Remove(review);
+            _context.Reviews.Remove(r);
             await _context.SaveChangesAsync();
         }
     }
+    public async Task<double> GetAverageRatingAsync(int spotId)
+    {
+        var count = await _context.Reviews
+                                  .CountAsync(r => r.SpotId == spotId);
+
+        if (count == 0)
+            return 0;
+
+        var sum = await _context.Reviews
+                                .Where(r => r.SpotId == spotId)
+                                .SumAsync(r => r.Rating);
+
+        return (double)sum / count;
+    }
+
+
+    public Task<int> GetReviewCountAsync(int spotId)
+      => _context.Reviews
+                 .CountAsync(r => r.SpotId == spotId);
+
+    public async Task<Review?> GetByIdAsync(int reviewId)
+    {
+        return await _context.Reviews
+                             .FirstOrDefaultAsync(r => r.ReviewId == reviewId);
+    }
+
 }

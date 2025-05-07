@@ -67,7 +67,7 @@ namespace Server
 
             var recEmail = "receptionist@example.com";
             var recUser = await userManager.FindByEmailAsync(recEmail);
-            if (recUser == null) 
+            if (recUser == null)
             {
                 recUser = new ApplicationUser
                 {
@@ -75,15 +75,21 @@ namespace Server
                     Email = recEmail,
                     EmailConfirmed = true
                 };
+
                 var recResult = await userManager.CreateAsync(recUser, "Reception123!");
                 if (!recResult.Succeeded)
                     throw new Exception("Failed to create receptionist: " +
                         string.Join("; ", recResult.Errors.Select(e => e.Description)));
             }
+
             if (!await userManager.IsInRoleAsync(recUser, "Receptionist"))
             {
-                userManager.AddToRoleAsync(recUser, "Receptionist");
+                var addRoleResult = await userManager.AddToRoleAsync(recUser, "Receptionist");
+                if (!addRoleResult.Succeeded)
+                    throw new Exception("Failed to add receptionist to role: " +
+                        string.Join("; ", addRoleResult.Errors.Select(e => e.Description)));
             }
+
 
             if (!context.Categories.Any())
             {
@@ -264,6 +270,25 @@ namespace Server
             }
 
             await context.SaveChangesAsync();
+
+            if (!context.Reviews.Any())
+            {
+                var allSpots = await context.VacationSpots.ToListAsync();
+                var now = DateTime.UtcNow;
+                var rnd = new Random();
+
+                var demoReviews = allSpots.Select(spot => new Review
+                {
+                    SpotId = spot.SpotId,
+                    UserId = appUser.Id,
+                    Rating = rnd.Next(1, 6),
+                    Comment = $"This is a seeded review for “{spot.Title}”.",
+                    CreatedAt = now.AddDays(-rnd.Next(1, 30))
+                }).ToList();
+
+                context.Reviews.AddRange(demoReviews);
+                await context.SaveChangesAsync();
+            }
 
             if (!context.Bookings.Any())
             {

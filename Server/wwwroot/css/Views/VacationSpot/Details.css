@@ -103,3 +103,135 @@
     .spot-details__description p {
         line-height: 1.6;
     }
+
+
+.spot-reviews {
+    border: 1px solid #ccc;
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin: 2rem 0;
+    background: #fafafa;
+}
+
+.rating-summary {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+    .rating-summary h2 {
+        margin: 0;
+        margin-right: 1rem;
+        font-size: 1.3rem;
+    }
+
+    .rating-summary .stars {
+        display: flex;
+        align-items: center;
+    }
+
+        .rating-summary .stars i {
+            font-size: 1.2rem;
+            margin-right: 0.2rem;
+        }
+
+            .rating-summary .stars i.fas.fa-star {
+                color: gold;
+            }
+
+            .rating-summary .stars i.far.fa-star {
+                color: #ddd;
+            }
+
+    .rating-summary .avg-text {
+        margin-left: 0.5rem;
+        font-size: 1rem;
+        color: #555;
+    }
+
+.add-review {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+    .add-review h3 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+
+    .add-review .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .add-review label {
+        font-weight: bold;
+        margin-bottom: 0.3rem;
+        display: block;
+    }
+
+    .add-review select,
+    .add-review textarea {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+    }
+
+    .add-review button[type="submit"] {
+        margin-top: 0.5rem;
+    }
+
+.existing-reviews {
+    margin-top: 2rem;
+}
+
+    .existing-reviews h3 {
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+
+    .existing-reviews p {
+        color: #666;
+        font-style: italic;
+    }
+
+    .existing-reviews .review {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: white;
+    }
+
+        .existing-reviews .review:last-child {
+            border-bottom: none;
+        }
+
+    .rating-summary .stars i.far.fa-star,
+    .existing-reviews .stars-inline i.far.fa-star {
+        text-shadow: none;
+        color: transparent;
+        -webkit-text-stroke: 0.8px black;
+    }
+
+        .rating-summary .stars i.fas.fa-star,
+        .existing-reviews .stars-inline i.fas.fa-star {
+            color: gold;
+        }
+        .rating-summary .stars i.far.fa-star,
+        .existing-reviews .stars-inline i.far.fa-star {
+            color: transparent;
+        }
+.delete-review-form {
+    display: inline-block;
+    margin-left: 1rem;
+}
+
+    .delete-review-form .btn-danger {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.8rem;
+    }

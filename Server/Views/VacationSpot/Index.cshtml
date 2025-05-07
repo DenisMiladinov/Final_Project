@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<Models.VacationSpot>
+@using System.IO
+@using System.Linq
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Destinations";
@@ -65,9 +67,24 @@
     <div class="destination__grid">
         @foreach (var spot in Model)
         {
+            string imgUrl;
+            if (spot.Images != null && spot.Images.Any())
+            {
+                imgUrl = $"~/assets/Spots/{spot.Images.First().ImageUrl.Split('/').Last()}";
+            }
+            else if (!string.IsNullOrEmpty(spot.ImageUrl))
+            {
+                imgUrl = spot.ImageUrl.StartsWith("~")
+                ? spot.ImageUrl
+                : "~" + spot.ImageUrl;
+            }
+            else
+            {
+                imgUrl = "~/assets/Spots/placeholder.jpg";
+            }
+
             <div class="vacation-card">
-                <img src="@(Url.Content($"~/assets/Spots/{spot.Images.First().ImageUrl.Split('/').Last()}"))" 
-                alt="@spot.Title" />
+                <img src="@(Url.Content(imgUrl))" alt="@spot.Title" />
                 <h3>@spot.Title</h3>
                 <p>@spot.Location</p>
                 <p class="vacation-card__category">
@@ -82,9 +99,8 @@
                         Check deal →<i class="ri-arrow-right-s-line"></i>
                     </a>
                 </div>
-
             </div>
-         }
+        }
     </div>
 </section>
 
@@ -110,22 +126,19 @@
             btn.addEventListener('click', () => {
               btn.classList.toggle('active');
 
-              // build array of selected IDs
               const selected = Array.from(
                 document.querySelectorAll('.category-tag.active')
               ).map(b => b.getAttribute('data-id'));
 
-              // rebuild hidden inputs
               hiddenContainer.innerHTML = '';
               selected.forEach(id => {
                 const inp = document.createElement('input');
                 inp.type  = 'hidden';
-                inp.name  = 'categoryFilter'; // MVC will bind this to int[] categoryFilter
+                inp.name  = 'categoryFilter';
                 inp.value = id;
                 hiddenContainer.appendChild(inp);
               });
 
-              // rerun the search
               form.submit();
             });
           });

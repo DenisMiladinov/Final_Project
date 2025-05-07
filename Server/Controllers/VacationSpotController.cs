@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 using Services.Services;
+using Models.ViewModels;
+using Stripe;
 
 namespace Server.Controllers
 {
@@ -12,12 +14,14 @@ namespace Server.Controllers
         private readonly IVacationSpotService _vacationSpotService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ApplicationDbContext _context;
+        private readonly IReviewService _reviewService;
 
-        public VacationSpotController(IVacationSpotService vacationSpotService, IWebHostEnvironment webHostEnvironment, ApplicationDbContext context)
+        public VacationSpotController(IVacationSpotService vacationSpotService, IWebHostEnvironment webHostEnvironment, ApplicationDbContext context, IReviewService reviewService)
         {
             _vacationSpotService = vacationSpotService;
             _webHostEnvironment = webHostEnvironment;
             _context = context;
+            _reviewService = reviewService;
         }
 
         private async Task PopulateCategoriesAsync(int? selectedId = null)
@@ -74,11 +78,21 @@ namespace Server.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var spot = await _vacationSpotService.GetByIdAsync(id);
-            if (spot == null)
-                return NotFound();
+            var reviews = await _reviewService.GetBySpotIdAsync(id);
+            var avg = await _reviewService.GetAverageRatingAsync(id);
+            var count = await _reviewService.GetReviewCountAsync(id);
 
-            return View(spot);
+            var vm = new VacationSpotDetailsViewModel
+            {
+                Spot = spot,
+                Reviews = reviews,
+                AverageRating = avg,
+                ReviewCount = count,
+                NewReview = new ReviewViewModel { SpotId = id }
+            };
+            return View(vm);
         }
+
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()

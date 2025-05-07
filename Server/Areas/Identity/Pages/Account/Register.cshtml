@@ -20,11 +20,17 @@
             <div asp-validation-summary="ModelOnly"
                  class="text-danger auth-page__errors"
                  role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Username" type="text" class="form-control" placeholder="Username" />
-                <label asp-for="Input.Username">Username</label>
-                <span asp-validation-for="Input.Username" class="text-danger"></span>
-            </div>
+
+            <label class="auth-field">
+                <span class="auth-field__label">Username</span>
+                <input asp-for="Input.Username"
+                       class="auth-field__input"
+                       placeholder="Username"
+                       autocomplete="username" />
+                <span asp-validation-for="Input.Username"
+                      class="text-danger auth-field__error"></span>
+            </label>
+
             <label class="auth-field">
                 <span class="auth-field__label">Email</span>
                 <input asp-for="Input.Email"

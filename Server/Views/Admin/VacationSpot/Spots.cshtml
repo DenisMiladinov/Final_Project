@@ -3,45 +3,50 @@
     ViewData["Title"] = "Manage Vacation Spots";
 }
 
-<section class="section__container">
-    <div class="section__header">
-        <h2 class="section__title">Manage Vacation Spots</h2>
-        <p class="section__subtitle">All your listings—edit, delete, or add new ones.</p>
-        <a href="/Admin/CreateSpot" class="btn btn-success mb-3">+ New Spot</a>
-    </div>
+<section class="py-5">
+    <div class="container">
+        <h2 class="display-5 mb-2">@ViewData["Title"]</h2>
+        <p class="text-muted mb-4">
+            All your listings—edit, delete, or add new ones.
+        </p>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Location</th>
-                <th>Price / night</th>
-                <th style="white-space: nowrap">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var spot in Model)
-            {
-                <tr>
-                    <td>@spot.Title</td>
-                    <td>@spot.Location</td>
-                    <td>@spot.PricePerNight.ToString("C")</td>
-                    <td>
-                        <a asp-controller="Admin"
-                           asp-action="EditSpot"
-                           asp-route-id="@spot.SpotId"
-                           class="btn btn-sm btn-primary">
-                            Edit
-                        </a>
-                        <a asp-controller="Admin"
-                           asp-action="DeleteSpot"
-                           asp-route-id="@spot.SpotId"
-                           class="btn btn-sm btn-danger">
-                            Delete
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        <a href="/Admin/CreateSpot" class="btn btn-success mb-4">+ New Spot</a>
+
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-striped table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Location</th>
+                        <th class="text-end">Price / night</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var spot in Model)
+                    {
+                        <tr>
+                            <td>@spot.Title</td>
+                            <td>@spot.Location</td>
+                            <td class="text-end">@string.Format("{0:C}", spot.PricePerNight)</td>
+                            <td class="text-center">
+                                <a asp-controller="Admin"
+                                   asp-action="EditSpot"
+                                   asp-route-id="@spot.SpotId" 
+                                   class="btn btn-sm btn-primary me-1">
+                                    Edit
+                                </a>
+                                <a asp-controller="Admin"
+                                   asp-action="DeleteSpot"
+                                   asp-route-id="@spot.SpotId"
+                                   class="btn btn-sm btn-danger">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>

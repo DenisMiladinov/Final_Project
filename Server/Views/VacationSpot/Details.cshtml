@@ -1,7 +1,10 @@
-﻿@model Models.VacationSpot
+﻿@model Models.ViewModels.VacationSpotDetailsViewModel
+@using System.Linq
+@using System.Security.Claims
+
 @{
     Layout = "_Layout";
-    ViewData["Title"] = Model.Title;
+    ViewData["Title"] = Model.Spot.Title;
 }
 
 @section Styles {
@@ -11,26 +14,37 @@
 <section class="spot-details">
     <div class="spot-details__container">
         <div class="spot-details__gallery">
-            <img src="@(Url.Content($"~/assets/Spots/{Model.Images.First().ImageUrl.Split('/').Last()}"))" alt="@Model.Title" class="spot-details__main-img" />
+            @{
+                var firstImageUrl = Model.Spot.Images?.FirstOrDefault()?.ImageUrl
+                ?? Model.Spot.ImageUrl
+                ?? "/assets/Spots/placeholder.jpg";
+                var firstFileName = firstImageUrl.Split('/').Last();
+            }
+            <img src="@(Url.Content($"~/assets/Spots/{firstFileName}"))"
+                 alt="@Model.Spot.Title"
+                 class="spot-details__main-img" />
+
             <div class="spot-details__thumbs">
-                @foreach (var img in Model.Images)
+                @foreach (var img in Model.Spot.Images ?? Enumerable.Empty<Models.Image>())
                 {
-                    <img src="@(Url.Content($"~/assets/Spots/{img.ImageUrl.Split('/').Last()}"))"
+                    var fileName = img.ImageUrl.Split('/').Last();
+                    <img src="@(Url.Content($"~/assets/Spots/{fileName}"))"
                          class="spot-details__thumb"
-                         data-src="@(Url.Content($"~/assets/Spots/{img.ImageUrl.Split('/').Last()}"))" />
+                         data-src="@(Url.Content($"~/assets/Spots/{fileName}"))" />
                 }
             </div>
         </div>
 
+
         <div class="spot-details__info">
-            <h1 class="spot-details__title">@Model.Title</h1>
-            <p class="spot-details__location">@Model.Location</p>
-            <p class="spot-details__category">Category: @Model.Category?.Name</p>
-            <p class="spot-details__price">@Model.PricePerNight lv per night</p>
+            <h1 class="spot-details__title">@Model.Spot.Title</h1>
+            <p class="spot-details__location">@Model.Spot.Location</p>
+            <p class="spot-details__category">Category: @Model.Spot.Category?.Name</p>
+            <p class="spot-details__price">@Model.Spot.PricePerNight lv per night</p>
             <a asp-action="Index" asp-controller="VacationSpot" class="btn btn--back">← Back to list</a>
             <a asp-controller="Booking"
                asp-action="Checkout"
-               asp-route-spotId="@Model.SpotId"
+               asp-route-spotId="@Model.Spot.SpotId"
                class="btn btn--book">
                 Book now →
             </a>
@@ -38,9 +52,93 @@
 
             <div class="spot-details__description">
                 <h2>Description</h2>
-                <p>@Model.Description</p>
+                <p>@Model.Spot.Description</p>
             </div>
         </div>
+    </div>
+</section>
+<section class="spot-reviews">
+    <div class="rating-summary">
+        <h2>Overall Rating</h2>
+        <div class="stars">
+            @for (int i = 1; i <= 5; i++)
+            {
+                var starClass = i <= Math.Round(Model.AverageRating)
+                ? "fas fa-star"
+                : "far fa-star";
+                <i class="@starClass"></i>
+            }
+            <span class="avg-text">@(Model.AverageRating.ToString("F1")) (@Model.ReviewCount reviews)</span>
+        </div>
+    </div>
+
+    <div class="add-review">
+        <h3>Leave a Review</h3>
+        <form asp-controller="Review" asp-action="Add" method="post">
+            <input asp-for="NewReview.SpotId" type="hidden" />
+
+            <div class="form-group">
+                <label asp-for="NewReview.Rating">Rating</label>
+                <select asp-for="NewReview.Rating" class="form-control">
+                    <option value="">Select…</option>
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <option value="@i">@i star@(i > 1 ? "s" : "")</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NewReview.Comment">Comment</label>
+                <textarea asp-for="NewReview.Comment" class="form-control"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+
+    <div class="existing-reviews">
+        <h3>User Reviews</h3>
+        @if (!Model.Reviews.Any())
+        {
+            <p>No reviews yet. Be the first to share your experience!</p>
+        }
+        else
+        {
+            @foreach (var r in Model.Reviews.OrderByDescending(r => r.CreatedAt))
+            {
+                <div class="review">
+                    <div class="review-header">
+                        <strong>@r.User.UserName</strong>
+                        <small class="date">@r.CreatedAt.ToString("MMM d, yyyy")</small>
+                        <span class="stars-inline">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                var c = i <= r.Rating ? "fas fa-star" : "far fa-star";
+                                <i class="@c"></i>
+                            }
+                        </span>
+                        @if (User.Identity.IsAuthenticated &&
+                       (r.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)
+                       || User.IsInRole("Admin")))
+                        {
+                            <form asp-controller="Review"
+                                  asp-action="Delete"
+                                  method="post"
+                                  class="delete-review-form">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@r.ReviewId" />
+                                <input type="hidden" name="spotId" value="@Model.Spot.SpotId" />
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    Delete
+                                </button>
+                            </form>
+                        }
+                    </div>
+                    <p>@r.Comment</p>
+                </div>
+            }
+        }
     </div>
 </section>
 

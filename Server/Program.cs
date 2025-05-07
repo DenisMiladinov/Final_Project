@@ -48,6 +48,7 @@ namespace Server
             builder.Services.AddScoped<IReviewService, ReviewService>();
 
             builder.Services.AddRazorPages();
+            builder.Services.AddSignalR();
 
             var stripeKey = builder.Configuration["Stripe:SecretKey"];
             Stripe.StripeConfiguration.ApiKey = stripeKey;
@@ -73,6 +74,7 @@ namespace Server
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.MapRazorPages();
+            app.MapHub<Hubs.ChatHub>("/chatHub");
 
             using (var scope = app.Services.CreateScope())
             {

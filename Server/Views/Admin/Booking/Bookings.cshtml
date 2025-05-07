@@ -4,35 +4,41 @@
     ViewData["Title"] = "Manage Bookings";
 }
 
-<h1 class="mt-4">Manage Bookings</h1>
-
-<table class="table table-striped mt-3">
-    <thead>
-        <tr>
-            <th>Booking ID</th>
-            <th>Spot</th>
-            <th>User</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Total Price</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var booking in Model)
-        {
-            <tr>
-                <td>@booking.BookingId</td>
-                <td>@booking.VacationSpot.Title</td>
-                <td>@booking.User.UserName</td>
-                <td>@booking.StartDate.ToString("yyyy-MM-dd")</td>
-                <td>@booking.EndDate.ToString("yyyy-MM-dd")</td>
-                <td>@booking.TotalPrice.ToString("C")</td>
-                <td>
-                    <a asp-action="EditBooking" asp-route-id="@booking.BookingId" class="btn btn-primary btn-sm">Edit</a>
-                    <a asp-action="DeleteBooking" asp-route-id="@booking.BookingId" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<section class="py-5">
+    <div class="container">
+        <h2 class="display-5 mb-2">Manage Bookings</h2>
+        <p class="text-muted mb-4">All bookings—view, edit, or cancel.</p>
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-striped table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Spot</th>
+                        <th>User</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th class="text-end">Total Price</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var b in Model)
+                    {
+                        <tr>
+                            <td>@b.BookingId</td>
+                            <td>@b.VacationSpot?.Title</td>
+                            <td>@b.User?.UserName</td>
+                            <td>@b.StartDate.ToString("yyyy-MM-dd")</td>
+                            <td>@b.EndDate.ToString("yyyy-MM-dd")</td>
+                            <td class="text-end">@b.TotalPrice.ToString("C")</td>
+                            <td class="text-center">
+                                <a asp-action="EditBooking" asp-route-id="@b.BookingId" class="btn btn-sm btn-primary me-1">Edit</a>
+                                <a asp-action="DeleteBooking" asp-route-id="@b.BookingId" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

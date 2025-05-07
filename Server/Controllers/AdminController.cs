@@ -10,25 +10,28 @@ using Services.Services;
 
 namespace Server.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Receptionist")]
     public class AdminController : Controller
     {
         private readonly IVacationSpotService _spotService;
         private readonly IBookingService _bookingService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
         public AdminController(
             IVacationSpotService spotService,
             IBookingService bookingService,
             UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context
+            ApplicationDbContext context,
+            IWebHostEnvironment env
         )
         {
             _spotService = spotService;
             _bookingService = bookingService;
             _userManager = userManager;
             _context = context;
+            _env = env;
         }
 
         public async Task<IActionResult> Index()
@@ -58,11 +61,13 @@ namespace Server.Controllers
                 selectedValue: selectedId
             );
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Spots()
         {
             var model = await _spotService.GetAllAsync();
             return View("VacationSpot/Spots", model);
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateSpot()
         {
             await PopulateCategoriesAsync();
@@ -73,15 +78,34 @@ namespace Server.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateSpot(VacationSpot m, IFormFile? ImageFile)
         {
+            m.OwnerId = _userManager.GetUserId(User);
+
+            ModelState.Remove(nameof(m.OwnerId));
+            ModelState.Remove(nameof(m.Owner));
+            ModelState.Remove(nameof(m.Category));
+
             await PopulateCategoriesAsync(m.CategoryId);
 
             if (!ModelState.IsValid)
                 return View("VacationSpot/CreateSpot", m);
 
+
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+                Directory.CreateDirectory(uploadsFolder);
+                var fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await ImageFile.CopyToAsync(stream);
+                m.ImageUrl = $"/uploads/{fileName}";
+            }
+
             await _spotService.CreateAsync(m);
             return RedirectToAction(nameof(Spots));
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditSpot(int id)
         {
             var m = await _spotService.GetByIdAsync(id);
@@ -92,6 +116,7 @@ namespace Server.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditSpot(int id, VacationSpot m, IFormFile? ImageFile)
         {
             await PopulateCategoriesAsync(m.CategoryId);
@@ -104,6 +129,7 @@ namespace Server.Controllers
             return RedirectToAction(nameof(Spots));
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSpot(int id)
         {
             await PopulateCategoriesAsync();
@@ -113,6 +139,7 @@ namespace Server.Controllers
         }
 
         [HttpPost, ActionName("DeleteSpot"), ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSpotConfirmed(int id)
         {
             await PopulateCategoriesAsync();
@@ -141,7 +168,6 @@ namespace Server.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditBooking(int id, Booking model)
         {
             if (id != model.BookingId) return BadRequest();
@@ -152,7 +178,6 @@ namespace Server.Controllers
             return RedirectToAction(nameof(Bookings));
         }
 
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
             var booking = await _bookingService.GetByIdAsync(id);
@@ -161,7 +186,6 @@ namespace Server.Controllers
         }
 
         [HttpPost, ActionName("DeleteBooking"), ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBookingConfirmed(int id)
         {
             await _bookingService.DeleteAsync(id);
@@ -170,6 +194,7 @@ namespace Server.Controllers
 
 
         //---------------------------------------------------USER---------------------------------------------------
+        [Authorize(Roles = "Admin")]
         public IActionResult Users()
         {
             var model = _userManager.Users.ToList();
@@ -177,6 +202,7 @@ namespace Server.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SetUserRole(string userId, string role)
         {
             var u = await _userManager.FindByIdAsync(userId);
@@ -186,6 +212,7 @@ namespace Server.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -205,7 +232,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -221,6 +248,7 @@ namespace Server.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditUser(EditUserViewModel vm)
         {
             if (!ModelState.IsValid)

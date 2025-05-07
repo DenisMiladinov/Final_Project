@@ -1,4 +1,5 @@
 ﻿using Models;
+using Models.ViewModels;
 
 namespace Services.Services
 {
@@ -11,5 +12,6 @@ namespace Services.Services
         Task DeleteAsync(int id);
         Task<IEnumerable<VacationSpot>> GetByLocationAsync(string location);
         Task<IEnumerable<VacationSpot>> GetAvailableSpotsAsync(DateTime startDate, DateTime endDate);
+        Task<VacationSpotDetailsViewModel> BuildDetailsViewModelAsync(int spotId);
     }
 }

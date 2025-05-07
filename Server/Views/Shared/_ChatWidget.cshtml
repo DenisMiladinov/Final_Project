@@ -1,0 +1,40 @@
+﻿@model int
+
+@if (User.IsInRole("Receptionist"))
+{
+    <div id="chatBox-@Model" class="chat-box">
+        <h5>Live Chat</h5>
+        <ul id="messagesList-@Model" class="chat-messages"></ul>
+        <input id="messageInput-@Model" placeholder="Type a message…" autocomplete="off" />
+        <button id="sendBtn-@Model">Send</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script>
+    <script>
+        (function() {
+          const bookingId = @Model;
+          const connection = new signalR.HubConnectionBuilder()
+            .withUrl(`/chatHub?bookingId=${bookingId}`)
+            .build();
+
+          connection.on("ReceiveMessage", (user, msg) => {
+            const ul = document.getElementById(`messagesList-${bookingId}`);
+            const li = document.createElement("li");
+            li.textContent = `${user}: ${msg}`;
+            ul.appendChild(li);
+          });
+
+          connection.start().catch(console.error);
+
+          document.getElementById(`sendBtn-${bookingId}`)
+                  .addEventListener("click", () => {
+            const input = document.getElementById(`messageInput-${bookingId}`);
+            const text = input.value.trim();
+            if (!text) return;
+            connection.invoke("SendMessage", bookingId, text)
+                      .catch(console.error);
+            input.value = "";
+          });
+        })();
+    </script>
+}

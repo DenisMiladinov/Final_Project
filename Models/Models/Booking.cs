@@ -16,10 +16,14 @@ namespace Models
         public int SpotId { get; set; }
         public VacationSpot VacationSpot { get; set; }
 
+        [Required]
         public DateTime StartDate { get; set; }
 
+        [Required]
         public DateTime EndDate { get; set; }
 
+        [Required]
+        [Range(0.01, double.MaxValue)]
         public decimal TotalPrice { get; set; }
 
         [ForeignKey("Payment")]

@@ -5,7 +5,7 @@
 }
 
 <h1>Edit Booking #@Model.BookingId</h1>
-<form asp-action="EditBooking" method="post" class="mt-3">
+<form asp-action="EditBooking" asp-route-id="@Model.BookingId" method="post" class="mt-3">
     <input type="hidden" asp-for="BookingId" />
     <div class="mb-3">
         <label asp-for="StartDate" class="form-label"></label>

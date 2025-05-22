@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.Models;
 using Models.ViewModels;
 using Server.Areas.Admin.ViewModels;
 using Services.Services;
@@ -48,91 +49,131 @@ namespace Server.Controllers
 
 
         //---------------------------------------------------SPOTS---------------------------------------------------
-        private async Task PopulateCategoriesAsync(int? selectedId = null)
+        private async Task PopulateCategoriesAsync(VacationSpotFormViewModel vm)
         {
-            var cats = await _context.Categories
-                                     .OrderBy(c => c.Name)
-                                     .ToListAsync();
-
-            ViewBag.Categories = new SelectList(
+            var cats = await _context.Categories.OrderBy(c => c.Name).ToListAsync();
+            vm.CategoriesList = new MultiSelectList(
                 items: cats,
                 dataValueField: "CategoryId",
                 dataTextField: "Name",
-                selectedValue: selectedId
+                selectedValues: vm.SelectedCategoryIds
             );
         }
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Spots()
         {
             var model = await _spotService.GetAllAsync();
             return View("VacationSpot/Spots", model);
         }
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateSpot()
         {
-            await PopulateCategoriesAsync();
-            return View("VacationSpot/CreateSpot", new VacationSpot());
+            var vm = new VacationSpotFormViewModel();
+            await PopulateCategoriesAsync(vm);
+            return View("VacationSpot/CreateSpot", vm);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateSpot(VacationSpot m, IFormFile? ImageFile)
+        public async Task<IActionResult> CreateSpot(VacationSpotFormViewModel vm)
         {
-            m.OwnerId = _userManager.GetUserId(User);
-
-            ModelState.Remove(nameof(m.OwnerId));
-            ModelState.Remove(nameof(m.Owner));
-            ModelState.Remove(nameof(m.Category));
-
-            await PopulateCategoriesAsync(m.CategoryId);
-
             if (!ModelState.IsValid)
-                return View("VacationSpot/CreateSpot", m);
+            {
+                await PopulateCategoriesAsync(vm);
+                return View("VacationSpot/CreateSpot", vm);
+            }
 
+            var spot = new VacationSpot
+            {
+                Title = vm.Title,
+                Description = vm.Description,
+                Location = vm.Location,
+                PricePerNight = vm.PricePerNight,
+                OwnerId = _userManager.GetUserId(User)
+            };
 
-            if (ImageFile != null && ImageFile.Length > 0)
+            spot.VacationSpotCategories = vm.SelectedCategoryIds
+                .Select(id => new VacationSpotCategory { CategoryId = id })
+                .ToList();
+
+            if (vm.ImageFile != null && vm.ImageFile.Length > 0)
             {
                 var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
                 Directory.CreateDirectory(uploadsFolder);
-                var fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
+                var fileName = Guid.NewGuid() + Path.GetExtension(vm.ImageFile.FileName);
                 var filePath = Path.Combine(uploadsFolder, fileName);
                 using var stream = new FileStream(filePath, FileMode.Create);
-                await ImageFile.CopyToAsync(stream);
-                m.ImageUrl = $"/uploads/{fileName}";
+                await vm.ImageFile.CopyToAsync(stream);
+                spot.ImageUrl = $"/uploads/{fileName}";
             }
 
-            await _spotService.CreateAsync(m);
+            await _spotService.CreateAsync(spot);
             return RedirectToAction(nameof(Spots));
         }
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditSpot(int id)
         {
-            var m = await _spotService.GetByIdAsync(id);
-            if (m == null) return NotFound();
+            var spot = await _spotService.GetByIdAsync(id);
+            if (spot == null) return NotFound();
 
-            await PopulateCategoriesAsync(m.CategoryId);
-            return View("VacationSpot/EditSpot", m);
+            var vm = new VacationSpotFormViewModel
+            {
+                SpotId = spot.SpotId,
+                Title = spot.Title,
+                Description = spot.Description,
+                Location = spot.Location,
+                PricePerNight = spot.PricePerNight,
+                SelectedCategoryIds = spot.VacationSpotCategories.Select(vc => vc.CategoryId).ToList()
+            };
+            await PopulateCategoriesAsync(vm);
+            return View("VacationSpot/EditSpot", vm);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> EditSpot(int id, VacationSpot m, IFormFile? ImageFile)
+        public async Task<IActionResult> EditSpot(VacationSpotFormViewModel vm)
         {
-            await PopulateCategoriesAsync(m.CategoryId);
-
-            if (id != m.SpotId) return BadRequest();
             if (!ModelState.IsValid)
-                return View("VacationSpot/EditSpot", m);
+            {
+                await PopulateCategoriesAsync(vm);
+                return View("VacationSpot/EditSpot", vm);
+            }
 
-            await _spotService.UpdateAsync(m);
+            var spot = await _spotService.GetByIdAsync(vm.SpotId!.Value);
+            if (spot == null) return NotFound();
+
+            spot.Title = vm.Title;
+            spot.Description = vm.Description;
+            spot.Location = vm.Location;
+            spot.PricePerNight = vm.PricePerNight;
+
+            spot.VacationSpotCategories.Clear();
+            spot.VacationSpotCategories = vm.SelectedCategoryIds
+                .Select(id => new VacationSpotCategory { VacationSpotId = spot.SpotId, CategoryId = id })
+                .ToList();
+
+
+            if (vm.ImageFile != null && vm.ImageFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+                Directory.CreateDirectory(uploadsFolder);
+                var fileName = Guid.NewGuid() + Path.GetExtension(vm.ImageFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await vm.ImageFile.CopyToAsync(stream);
+                spot.ImageUrl = $"/uploads/{fileName}";
+            }
+
+            await _spotService.UpdateAsync(spot);
             return RedirectToAction(nameof(Spots));
         }
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSpot(int id)
         {
-            await PopulateCategoriesAsync();
             var m = await _spotService.GetByIdAsync(id);
             if (m == null) return NotFound();
             return View("VacationSpot/DeleteSpot", m);
@@ -142,7 +183,6 @@ namespace Server.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSpotConfirmed(int id)
         {
-            await PopulateCategoriesAsync();
             await _spotService.DeleteAsync(id);
             return RedirectToAction(nameof(Spots));
         }

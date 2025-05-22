@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
@@ -11,9 +12,11 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250508200924_AddedMultipleCategories")]
+    partial class AddedMultipleCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,14 +239,8 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCancelled")
-                        .HasColumnType("bit");
 
                     b.Property<int>("PaymentId")
                         .HasColumnType("int");
@@ -253,10 +250,6 @@ namespace Models.Migrations
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("StripeSessionId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -287,7 +280,12 @@ namespace Models.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("VacationSpotSpotId")
+                        .HasColumnType("int");
+
                     b.HasKey("CategoryId");
+
+                    b.HasIndex("VacationSpotSpotId");
 
                     b.ToTable("Categories");
                 });
@@ -312,21 +310,6 @@ namespace Models.Migrations
                     b.HasIndex("SpotId");
 
                     b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("Models.Models.VacationSpotCategory", b =>
-                {
-                    b.Property<int>("VacationSpotId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("VacationSpotId", "CategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("VacationSpotCategory");
                 });
 
             modelBuilder.Entity("Models.Payment", b =>
@@ -400,6 +383,9 @@ namespace Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SpotId"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -422,6 +408,8 @@ namespace Models.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("SpotId");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("OwnerId");
 
@@ -498,6 +486,13 @@ namespace Models.Migrations
                     b.Navigation("VacationSpot");
                 });
 
+            modelBuilder.Entity("Models.Category", b =>
+                {
+                    b.HasOne("Models.VacationSpot", null)
+                        .WithMany("Categories")
+                        .HasForeignKey("VacationSpotSpotId");
+                });
+
             modelBuilder.Entity("Models.Image", b =>
                 {
                     b.HasOne("Models.VacationSpot", "VacationSpot")
@@ -505,25 +500,6 @@ namespace Models.Migrations
                         .HasForeignKey("SpotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("VacationSpot");
-                });
-
-            modelBuilder.Entity("Models.Models.VacationSpotCategory", b =>
-                {
-                    b.HasOne("Models.Category", "Category")
-                        .WithMany("VacationSpotCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.VacationSpot", "VacationSpot")
-                        .WithMany("VacationSpotCategories")
-                        .HasForeignKey("VacationSpotId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
 
                     b.Navigation("VacationSpot");
                 });
@@ -560,11 +536,19 @@ namespace Models.Migrations
 
             modelBuilder.Entity("Models.VacationSpot", b =>
                 {
+                    b.HasOne("Models.Category", "Category")
+                        .WithMany("VacationSpots")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Models.ApplicationUser", "Owner")
                         .WithMany("VacationSpot")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("Owner");
                 });
@@ -586,18 +570,18 @@ namespace Models.Migrations
 
             modelBuilder.Entity("Models.Category", b =>
                 {
-                    b.Navigation("VacationSpotCategories");
+                    b.Navigation("VacationSpots");
                 });
 
             modelBuilder.Entity("Models.VacationSpot", b =>
                 {
                     b.Navigation("Bookings");
 
+                    b.Navigation("Categories");
+
                     b.Navigation("Images");
 
                     b.Navigation("Reviews");
-
-                    b.Navigation("VacationSpotCategories");
                 });
 #pragma warning restore 612, 618
         }

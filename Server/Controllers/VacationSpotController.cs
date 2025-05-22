@@ -24,17 +24,17 @@ namespace Server.Controllers
             _reviewService = reviewService;
         }
 
-        private async Task PopulateCategoriesAsync(int? selectedId = null)
+        private async Task PopulateCategoriesAsync(List<int> selectedIds = null!)
         {
             var cats = await _context.Categories
-                                     .OrderBy(c => c.Name)
-                                     .ToListAsync();
+                .OrderBy(c => c.Name)
+                .ToListAsync();
 
-            ViewBag.Categories = new SelectList(
+            ViewBag.Categories = new MultiSelectList(
                 items: cats,
                 dataValueField: "CategoryId",
                 dataTextField: "Name",
-                selectedValue: selectedId
+                selectedValues: selectedIds
             );
         }
 
@@ -70,7 +70,9 @@ namespace Server.Controllers
 
             if (categoryFilter != null && categoryFilter.Any())
             {
-                spots = spots.Where(s => categoryFilter.Contains(s.CategoryId));
+                spots = spots.Where(s => s.VacationSpotCategories
+                         .Any(vc => categoryFilter.Contains(vc.CategoryId)));
+
             }
 
             return View(spots);
@@ -138,7 +140,8 @@ namespace Server.Controllers
             await PopulateCategoriesAsync();
             var m = await _vacationSpotService.GetByIdAsync(id);
             if (m == null) return NotFound();
-            await PopulateCategoriesAsync(m.CategoryId);
+            var selectedCategoryIds = m.VacationSpotCategories.Select(vc => vc.CategoryId).ToList();
+            await PopulateCategoriesAsync(selectedCategoryIds);
             return View("VacationSpot/EditSpot", m);
         }
 

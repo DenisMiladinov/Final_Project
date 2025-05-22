@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.Models;
 
 namespace Server
 {
@@ -119,7 +120,9 @@ namespace Server
                         new Image { ImageUrl = "/assets/Spots/loft1.jpg" }
                     },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List<VacationSpotCategory> {
+                        new VacationSpotCategory { CategoryId = defaultCat.CategoryId }
+                    }
                 },
                 new VacationSpot
                 {
@@ -129,7 +132,9 @@ namespace Server
                     PricePerNight = 280.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/cabin1.jpg" } },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List<VacationSpotCategory> {
+                        new VacationSpotCategory { CategoryId = defaultCat.CategoryId }
+                    }
                 },
                 new VacationSpot
                 {
@@ -139,7 +144,9 @@ namespace Server
                     PricePerNight = 320.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/loft1.jpg" } },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List<VacationSpotCategory> {
+                        new VacationSpotCategory { CategoryId = defaultCat.CategoryId }
+                    }
                 },
                 new VacationSpot
                 {
@@ -149,7 +156,7 @@ namespace Server
                     PricePerNight = 220.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/cottage1.jpg" } },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List < VacationSpotCategory > { new VacationSpotCategory { CategoryId = defaultCat.CategoryId } }
                 },
                 new VacationSpot
                 {
@@ -159,7 +166,7 @@ namespace Server
                     PricePerNight = 190.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/bungalow1.jpg" } },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List < VacationSpotCategory > { new VacationSpotCategory { CategoryId = defaultCat.CategoryId } }
                 },
                 new VacationSpot
                 {
@@ -169,7 +176,7 @@ namespace Server
                     PricePerNight = 210.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/retreat1.jpg" } },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List < VacationSpotCategory > { new VacationSpotCategory { CategoryId = defaultCat.CategoryId } }
                 },
                 new VacationSpot
                 {
@@ -179,7 +186,7 @@ namespace Server
                     PricePerNight = 250.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/townhouse1.jpg" } },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List < VacationSpotCategory > { new VacationSpotCategory { CategoryId = defaultCat.CategoryId } }
                 },
                 new VacationSpot
                 {
@@ -189,7 +196,7 @@ namespace Server
                     PricePerNight = 300.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/apartment1.jpg" } },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List < VacationSpotCategory > { new VacationSpotCategory { CategoryId = defaultCat.CategoryId } }
                 },
                 new VacationSpot
                 {
@@ -199,7 +206,7 @@ namespace Server
                     PricePerNight = 260.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/farmhouse1.jpg" } },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List < VacationSpotCategory > { new VacationSpotCategory { CategoryId = defaultCat.CategoryId } }
                 },
                 new VacationSpot
                 {
@@ -209,7 +216,7 @@ namespace Server
                     PricePerNight = 370.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/chalet1.jpg" } },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List < VacationSpotCategory > { new VacationSpotCategory { CategoryId = defaultCat.CategoryId } }
                 },
                 new VacationSpot
                 {
@@ -223,7 +230,7 @@ namespace Server
                         new Image { ImageUrl = "/assets/Spots/loft1.jpg" }
                     },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List < VacationSpotCategory > { new VacationSpotCategory { CategoryId = defaultCat.CategoryId } }
                 },
                 new VacationSpot
                 {
@@ -233,7 +240,7 @@ namespace Server
                     PricePerNight = 500.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/mountaincabin1.jpg" } },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List < VacationSpotCategory > { new VacationSpotCategory { CategoryId = defaultCat.CategoryId } }
                 },
                 new VacationSpot
                 {
@@ -243,7 +250,7 @@ namespace Server
                     PricePerNight = 350.00M,
                     Images = new List<Image> { new Image { ImageUrl = "/assets/Spots/ruralhouse1.jpg" } },
                     OwnerId = appUser.Id,
-                    CategoryId = defaultCat.CategoryId
+                    VacationSpotCategories = new List < VacationSpotCategory > { new VacationSpotCategory { CategoryId = defaultCat.CategoryId } }
                 }
             };
 

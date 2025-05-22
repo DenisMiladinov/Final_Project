@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+﻿/*using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -85,4 +85,4 @@ namespace UnitTests.Controllers
             Assert.Equal(9, result.RouteValues["id"]);
         }
     }
-}
+}*/

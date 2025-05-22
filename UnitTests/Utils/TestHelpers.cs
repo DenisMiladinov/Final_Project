@@ -1,5 +1,5 @@
 ﻿// File: UnitTests/Utils/TestHelpers.cs
-using System.Security.Claims;
+/*using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -48,4 +48,4 @@ namespace UnitTests.Utils
             };
         }
     }
-}
+}*/

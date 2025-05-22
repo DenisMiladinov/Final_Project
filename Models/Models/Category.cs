@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Models.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
@@ -11,8 +12,7 @@ namespace Models
         [StringLength(100)]
         public string Name { get; set; }
 
-        public ICollection<VacationSpot> VacationSpots { get; set; }
-            = new List<VacationSpot>();
+        public ICollection<VacationSpotCategory> VacationSpotCategories { get; set; }
 
     }
 }

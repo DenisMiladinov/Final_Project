@@ -51,23 +51,5 @@
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script>
         @await RenderSectionAsync("Scripts", required: false)
-    <script>
-        document.querySelectorAll('.support-chat-btn').forEach(btn => {
-
-          btn.addEventListener('click', e => {
-            e.preventDefault();
-
-            const container = document.getElementById('supportChatContainer');
-
-            container.style.display =
-              container.style.display === 'none'
-                ? 'block'
-                : 'none';
-          });
-        });
-    </script>
-    <div id="supportChatContainer" style="display:none; position:fixed; bottom:1rem; right:1rem; z-index:9999;">
-        @await Html.PartialAsync("_ChatWidget", 0)
-    </div>
     </body>
 </html>

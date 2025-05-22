@@ -1,3 +1,4 @@
+using Models.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,14 +28,11 @@ namespace Models
 
         public string? ImageUrl { get; set; }
 
-        [Required]
-        public int CategoryId { get; set; }
-        public Category Category { get; set; }
-
         public ICollection<Image> Images { get; set; } = new List<Image>();
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public ICollection<VacationSpotCategory> VacationSpotCategories { get; set; }
     }
 }

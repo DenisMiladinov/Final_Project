@@ -19,7 +19,8 @@ namespace Services.Services
         public async Task<IEnumerable<VacationSpot>> GetAllAsync()
         {
             return await _context.VacationSpots
-                                 .Include(v => v.Category)
+                                 .Include(v => v.VacationSpotCategories)
+                                 .ThenInclude(vc => vc.Category)
                                  .Include(v => v.Images)
                                  .ToListAsync();
         }
@@ -27,7 +28,8 @@ namespace Services.Services
         public async Task<VacationSpot?> GetByIdAsync(int id)
         {
             return await _context.VacationSpots
-                                 .Include(v => v.Category)
+                                 .Include(v => v.VacationSpotCategories)
+                                 .ThenInclude(vc => vc.Category)
                                  .Include(v => v.Images)
                                  .FirstOrDefaultAsync(v => v.SpotId == id);
         }
@@ -79,7 +81,7 @@ namespace Services.Services
             var count = await _reviewService.GetReviewCountAsync(spotId);
 
             return new VacationSpotDetailsViewModel
-            {
+            { 
                 Spot = spot,
                 Reviews = reviews,
                 AverageRating = avg,

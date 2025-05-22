@@ -21,7 +21,6 @@ namespace Server.Controllers
         public BookingController(IBookingService bookingService, IVacationSpotService spotService, UserManager<ApplicationUser> userManager, IConfiguration config)
         {
             _bookingService = bookingService;
-            _bookingService = bookingService;
             _spotService = spotService;
             _userManager = userManager;
             _config = config;
@@ -34,7 +33,8 @@ namespace Server.Controllers
             return View(bookings);
         }
 
-        public async Task<IActionResult> Checkout(int spotId)
+        [HttpPost]
+        public async Task<IActionResult> Checkout(int spotId, DateTime startDate, DateTime endDate)
         {
             var spot = await _spotService.GetByIdAsync(spotId);
             if (spot == null) return NotFound();
@@ -42,11 +42,13 @@ namespace Server.Controllers
             Stripe.StripeConfiguration.ApiKey = _config["Stripe:SecretKey"];
 
             var domain = $"{Request.Scheme}://{Request.Host}";
+            var successUrl = $"{domain}/Booking/Success?spotId={spotId}&session_id={{CHECKOUT_SESSION_ID}}";
+            var cancelUrl = $"{domain}/VacationSpot/Details/{spotId}";
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string> { "card" },
                 LineItems = new List<SessionLineItemOptions>
-        {
+            {
             new SessionLineItemOptions
             {
                 PriceData = new SessionLineItemPriceDataOptions
@@ -62,12 +64,11 @@ namespace Server.Controllers
             }
         },
                 Mode = "payment",
-                SuccessUrl = domain + Url.Action("Success", "Booking", new { spotId, session_id = "{CHECKOUT_SESSION_ID}" }),
-                CancelUrl = domain + Url.Action("Details", "VacationSpot", new { id = spotId })
+                SuccessUrl = successUrl,
+                CancelUrl = cancelUrl
             };
             var service = new SessionService();
-            var session = service.Create(options);
-
+            var session = await service.CreateAsync(options);
             return Redirect(session.Url);
         }
 
@@ -84,22 +85,30 @@ namespace Server.Controllers
             var booking = new Booking
             {
                 SpotId = spotId,
-                UserId = userId,
+                UserId = _userManager.GetUserId(User),
                 StartDate = DateTime.Today,
                 EndDate = DateTime.Today.AddDays(1),
-                TotalPrice = spot.PricePerNight
+                TotalPrice = spot.PricePerNight,
+                StripeSessionId = session_id,
+                CreatedAt = DateTime.Now
             };
-            await _bookingService.CreateBookingAsync(booking);
 
-            return View("Success", booking);
+            await _bookingService.CreateBookingAsync(booking);
+            return View("Confirmation", booking);
         }
 
 
         public IActionResult Create(int spotId)
         {
-            ViewBag.SpotId = spotId;
-            return View();
+            var m = new Booking
+            {
+                SpotId = spotId,
+                StartDate = DateTime.Today,
+                EndDate = DateTime.Today.AddDays(1)
+            };
+            return View(m);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -117,8 +126,12 @@ namespace Server.Controllers
             booking.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             booking.TotalPrice = (decimal)(booking.EndDate - booking.StartDate).TotalDays * booking.VacationSpot?.PricePerNight ?? 0;
 
-            await _bookingService.CreateBookingAsync(booking);
-            return RedirectToAction(nameof(MyBookings));
+            return RedirectToAction(nameof(Checkout), 
+                new{
+                    spotId = booking.SpotId,
+                    startDate = booking.StartDate,
+                    endDate = booking.EndDate
+                });
         }
 
         [HttpPost]
@@ -164,11 +177,15 @@ namespace Server.Controllers
             await _bookingService.DeleteAsync(id);
             return RedirectToAction("ManageBookings", "Admin");
         }
+
         [Authorize]
-        public IActionResult Chat(int bookingId)
+        [HttpGet]
+        public async Task<IActionResult> Confirmation(int id)
         {
-            var vm = new ChatViewModel { BookingId = bookingId };
-            return View(vm);
+            var booking = await _bookingService.GetByIdAsync(id);
+            if (booking == null) return NotFound();
+            return View("Confirmation", booking);
         }
+
     }
 }

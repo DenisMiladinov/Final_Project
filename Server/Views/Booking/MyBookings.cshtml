@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Models.Booking>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "My Bookings";
+}
+
+<section class="py-5">
+    <div class="container">
+        <h2 class="display-5 mb-4">@ViewData["Title"]</h2>
+
+        @if (!Model.Any())
+        {
+            <p>You have no bookings yet. <a asp-controller="VacationSpot" asp-action="Index">Book a spot now.</a></p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Spot</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Total</th>
+                        <th>Booked On</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var b in Model)
+                    {
+                        <tr>
+                            <td>@b.VacationSpot?.Title</td>
+                            <td>@b.StartDate.ToString("dd.MM.yyyy")</td>
+                            <td>@b.EndDate.ToString("dd.MM.yyyy")</td>
+                            <td>@b.TotalPrice,lv</td>
+                            <td>@b.CreatedAt.ToString("g")</td>
+                            <td>
+                                @(b.IsCancelled ? "Cancelled" : "Confirmed")
+                            </td>
+                            <td>
+                                <a asp-action="Confirmation" asp-route-id="@b.BookingId" class="btn btn-sm btn-info">
+                                    Details
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</section>

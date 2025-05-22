@@ -1,6 +1,7 @@
 ﻿@{
 Layout = "_Layout";
 ViewData["Title"] = "Home";
+
 }
 
 <header id="Home">
@@ -22,7 +23,7 @@ ViewData["Title"] = "Home";
                 <div class="action__btns">
                     <a asp-controller="VacationSpot"
                        asp-action="Index"
-                       class="plan__btn">
+                       class="btn btn--trip">
                         Plan a Trip
                     </a>
                 </div>
@@ -86,9 +87,9 @@ ViewData["Title"] = "Home";
                 <img src="assets/trip-1.jpg" alt="trip" />
                 <div class="trip__details">
                     <p>Wasserwerk Freiberg, Germany</p>
-                    <div class="rating"><i class="ri-star-fill"></i>⭐ 4.2</div>
+                    <div class="rating"><i class="ri-star-fill"></i></div>
                     <div class="booking__price">
-                        <div class="price"><span>From</span> 350.00 lv</div>
+                        <div class="price"> 350.00 lv</div>
                         <a asp-controller="VacationSpot"
                             asp-action="Details"
                             asp-route-id="13"
@@ -102,9 +103,9 @@ ViewData["Title"] = "Home";
                 <img src="assets/trip-2.jpg" alt="trip" />
                 <div class="trip__details">
                     <p>Patagonia, Argentina and Chile</p>
-                    <div class="rating"><i class="ri-star-fill"></i>⭐ 4.5</div>
+                    <div class="rating"><i class="ri-star-fill"></i></div>
                     <div class="booking__price">
-                        <div class="price"><span>From</span> 500.00 lv</div>
+                        <div class="price"> 500.00 lv</div>
                         <a asp-controller="VacationSpot"
                             asp-action="Details"
                             asp-route-id="12"
@@ -118,9 +119,9 @@ ViewData["Title"] = "Home";
                 <img src="assets/trip-3.jpg" alt="trip" />
                 <div class="trip__details">
                     <p>The Dolomites, Italy</p>
-                    <div class="rating"><i class="ri-star-fill"></i>⭐ 4.7</div>
+                    <div class="rating"><i class="ri-star-fill"></i></div>
                     <div class="booking__price">
-                        <div class="price"><span>From</span> 450.00 lv</div>
+                        <div class="price"> 450.00 lv</div>
                         <a asp-controller="VacationSpot"
                             asp-action="Details"
                             asp-route-id="11"
@@ -164,25 +165,18 @@ ViewData["Title"] = "Home";
 <section class="subscribe">
     <div class="section__container subscribe__container">
         <div class="subscribe__content">
-            <h2 class="section__title">Subscribe to get special prize</h2>
+            <h2 class="section__title">Have a problem?</h2>
             <p class="section__subtitle">
-                Subscribe now to unlock exclusive offers and special prizes.
-                Don't miss out on our best deals and travel tips!
+                Send us your email at Etoma@gmail.com
             </p>
-        </div>
-        <div class="subscribe__form">
-            <form>
-                <input type="email" placeholder="Your email here" />
-                <button class="btn" type="submit">Send</button>
-            </form>
-        </div>
+        </div> 
     </div>
 </section>
 
 <footer id="Contact" class="footer">
     <div class="section__container footer__container">
         <div class="footer__col">
-            <h3>Etoma<span>.</span></h3>
+            <h3>Etoma</h3>
             <p>
                 Explore your suitable and dream places around the world. Here you
                 can find your right destination.
@@ -194,7 +188,6 @@ ViewData["Title"] = "Home";
                 <li><a asp-controller="Home" asp-action="FAQs">FAQs</a></li>
                 <li><a asp-controller="Home" asp-action="Terms">Terms &amp; Conditions</a></li>
                 <li><a asp-controller="Home" asp-action="PrivacyPolicy">Privacy Policy</a></li>
-                <li><a href="#" class="support-chat-btn">Live Chat</a></li>
             </ul>
         </div>
         <div class="footer__col">

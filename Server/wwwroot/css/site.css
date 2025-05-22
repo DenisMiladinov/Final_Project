@@ -267,3 +267,15 @@ h2.display-5 {
     border-radius: 0.25rem;
     overflow: hidden;
 }
+
+.btn--trip {
+    background-color: #006CFA;
+    color: #fff;
+    border-radius: 9999px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+    .btn--trip:hover {
+        background-color: #000;
+        color: #fff;
+    }

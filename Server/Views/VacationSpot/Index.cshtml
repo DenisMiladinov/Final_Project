@@ -37,7 +37,7 @@
         <form class="spot-search" method="get" asp-action="Index">
             <select name="locationFilter"
                     class="spot-filter__select"
-                    onchange="this.form.submit()">
+                    id="locationFilter">
                 <option value="">All</option>
                 <option value="Bulgaria"
                         selected="@( (ViewData["CurrentLocationFilter"] as string) == "Bulgaria" )">Bulgaria</option>
@@ -50,7 +50,7 @@
         <form id="categoryForm" class="spot-search ms-2" method="get" asp-action="Index">
             <div id="hiddenInputs"></div>
             <div class="category-tags">
-                @foreach (var item in (SelectList)ViewBag.Categories)
+                @foreach (var item in (MultiSelectList)ViewBag.Categories)
                 {
                     var id = item.Value;
                     var isActive = (ViewData["CurrentCategoryFilter"] as int[] ?? new int[0])
@@ -88,7 +88,7 @@
                 <h3>@spot.Title</h3>
                 <p>@spot.Location</p>
                 <p class="vacation-card__category">
-                    Category: @spot.Category?.Name
+                    Categories: @string.Join(", ", spot.VacationSpotCategories.Select(vc => vc.Category.Name))
                 </p>
                 <div class="vacation-card__footer">
                     <p class="vacation-card__price">@spot.PricePerNight lv</p>
@@ -118,30 +118,55 @@
         });
     </script>
     <script>
-        (function(){
-          const form = document.getElementById('categoryForm');
-          const hiddenContainer = document.getElementById('hiddenInputs');
+        document.addEventListener("DOMContentLoaded", function () {
+            const locationForm = document.querySelector('form select[name="locationFilter"]')?.closest('form');
+            if (locationForm) {
+                locationForm.addEventListener("submit", function (e) {
+                    e.preventDefault();
+                });
 
-          document.querySelectorAll('.category-tag').forEach(btn => {
-            btn.addEventListener('click', () => {
-              btn.classList.toggle('active');
+                locationForm.querySelector('select[name="locationFilter"]').addEventListener("change", function () {
+                    const selected = this.value;
+                    const url = new URL(window.location.href);
+                    url.searchParams.set("locationFilter", selected);
+                    window.history.pushState({}, "", url);
+                    location.reload();
+                });
+            }
 
-              const selected = Array.from(
-                document.querySelectorAll('.category-tag.active')
-              ).map(b => b.getAttribute('data-id'));
+            const categoryForm = document.getElementById('categoryForm');
+            const hiddenContainer = document.getElementById('hiddenInputs');
 
-              hiddenContainer.innerHTML = '';
-              selected.forEach(id => {
-                const inp = document.createElement('input');
-                inp.type  = 'hidden';
-                inp.name  = 'categoryFilter';
-                inp.value = id;
-                hiddenContainer.appendChild(inp);
-              });
-
-              form.submit();
+            if (categoryForm) {
+                categoryForm.addEventListener("submit", function (e) {
+                e.preventDefault();
             });
-          });
-        })();
+
+            document.querySelectorAll('.category-tag').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btn.classList.toggle('active');
+
+                    const selected = Array.from(
+                        document.querySelectorAll('.category-tag.active')
+                    ).map(b => b.getAttribute('data-id'));
+
+                    hiddenContainer.innerHTML = '';
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete("categoryFilter");
+                    selected.forEach(id => {
+                        const inp = document.createElement('input');
+                        inp.type = 'hidden';
+                        inp.name = 'categoryFilter';
+                        inp.value = id;
+                        hiddenContainer.appendChild(inp);
+                        url.searchParams.append("categoryFilter", id);
+                    });
+
+                    window.history.pushState({}, "", url);
+                    location.reload();
+                });
+            });
+        }
+        });
     </script>
 }

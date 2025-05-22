@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Models.Models;
 
 namespace Models
 {
@@ -52,6 +53,20 @@ namespace Models
                 .HasOne(v => v.Owner)
                 .WithMany(u => u.VacationSpot)
                 .HasForeignKey(v => v.OwnerId);
+
+            modelBuilder.Entity<VacationSpotCategory>()
+                .HasKey(vsc => new { vsc.VacationSpotId, vsc.CategoryId });
+
+            modelBuilder.Entity<VacationSpotCategory>()
+                .HasOne(vsc => vsc.VacationSpot)
+                .WithMany(vs => vs.VacationSpotCategories)
+                .HasForeignKey(vsc => vsc.VacationSpotId);
+
+            modelBuilder.Entity<VacationSpotCategory>()
+                .HasOne(vsc => vsc.Category)
+                .WithMany(c => c.VacationSpotCategories)
+                .HasForeignKey(vsc => vsc.CategoryId);
+
         }
     }
 }

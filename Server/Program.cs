@@ -60,7 +60,7 @@ namespace Server
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -74,7 +74,6 @@ namespace Server
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.MapRazorPages();
-            app.MapHub<Hubs.ChatHub>("/chatHub");
 
             using (var scope = app.Services.CreateScope())
             {

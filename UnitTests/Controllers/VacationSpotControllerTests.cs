@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿/*using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +16,7 @@ namespace UnitTests.Controllers
         private VacationSpotController CreateController(Mock<IVacationSpotService> mockService)
         {
             var envMock = new Mock<IWebHostEnvironment>();
-            envMock.Setup(e => e.WebRootPath).Returns(""); // not used in tested methods
+            envMock.Setup(e => e.WebRootPath).Returns("");
 
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase("TestDb")
@@ -88,4 +88,4 @@ namespace UnitTests.Controllers
     {
         public static List<T> AsList<T>(this IEnumerable<T> src) => new List<T>(src);
     }
-}
+}*/

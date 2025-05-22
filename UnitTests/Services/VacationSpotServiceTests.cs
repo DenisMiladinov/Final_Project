@@ -1,149 +1,79 @@
-﻿/*using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Xunit;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Models;
 using Services.Services;
-using Xunit;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace UnitTests.Services
 {
     public class VacationSpotServiceTests
     {
-        private ApplicationDbContext CreateContext(string dbName)
+        private readonly ApplicationDbContext _context;
+        private readonly Mock<IReviewService> _reviewServiceMock;
+        private readonly VacationSpotService _vacationSpotService;
+
+        public VacationSpotServiceTests()
         {
-            var opts = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(dbName)
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "VacationSpotServiceTests")
                 .Options;
-            return new ApplicationDbContext(opts);
+
+            _context = new ApplicationDbContext(options);
+            _reviewServiceMock = new Mock<IReviewService>();
+            _vacationSpotService = new VacationSpotService(_context, _reviewServiceMock.Object);
         }
 
         [Fact]
-        public async Task GetAllAsync_ReturnsAllSpotsWithRelated()
+        public async Task GetAllAsync_ReturnsAllVacationSpots()
         {
-            var ctx = CreateContext(nameof(GetAllAsync_ReturnsAllSpotsWithRelated));
-            var cat = new Category { CategoryId = 1, Name = "TestCat" };
-            ctx.Categories.Add(cat);
-            ctx.VacationSpots.Add(new VacationSpot
-            {
-                SpotId = 1,
-                Title = "A",
-                CategoryId = cat.CategoryId,
-                Images = new List<Image> { new Image { ImageId = 1, ImageUrl = "/i.jpg", SpotId = 1 } }
-            });
-            await ctx.SaveChangesAsync();
+            _context.VacationSpots.Add(new VacationSpot { SpotId = 1 });
+            _context.VacationSpots.Add(new VacationSpot { SpotId = 2 });
+            await _context.SaveChangesAsync();
 
-            var svc = new VacationSpotService(ctx);
-            var all = await svc.GetAllAsync();
+            var result = await _vacationSpotService.GetAllAsync();
 
-            var spot = Assert.Single(all);
-            Assert.Equal("A", spot.Title);
-            Assert.NotNull(spot.Category);
-            Assert.Single(spot.Images);
+            Assert.Equal(2, result.Count());
         }
 
         [Fact]
-        public async Task GetByIdAsync_FindsSpotOrNull()
+        public async Task GetByIdAsync_ReturnsCorrectSpot()
         {
-            var ctx = CreateContext(nameof(GetByIdAsync_FindsSpotOrNull));
-            ctx.VacationSpots.Add(new VacationSpot { SpotId = 10, Title = "Ten" });
-            await ctx.SaveChangesAsync();
+            var spot = new VacationSpot { SpotId = 100 };
+            _context.VacationSpots.Add(spot);
+            await _context.SaveChangesAsync();
 
-            var svc = new VacationSpotService(ctx);
-            var found = await svc.GetByIdAsync(10);
-            Assert.NotNull(found);
-            Assert.Equal("Ten", found.Title);
+            var result = await _vacationSpotService.GetByIdAsync(100);
 
-            var missing = await svc.GetByIdAsync(11);
-            Assert.Null(missing);
+            Assert.NotNull(result);
+            Assert.Equal(100, result.SpotId);
         }
 
         [Fact]
         public async Task CreateAsync_AddsSpot()
         {
-            var ctx = CreateContext(nameof(CreateAsync_AddsSpot));
-            var svc = new VacationSpotService(ctx);
+            var spot = new VacationSpot { SpotId = 200 };
 
-            var spot = new VacationSpot { SpotId = 5, Title = "New" };
-            await svc.CreateAsync(spot);
+            await _vacationSpotService.CreateAsync(spot);
 
-            var fromDb = await ctx.VacationSpots.FindAsync(5);
-            Assert.NotNull(fromDb);
-            Assert.Equal("New", fromDb.Title);
+            var result = await _context.VacationSpots.FindAsync(200);
+            Assert.NotNull(result);
         }
 
         [Fact]
-        public async Task UpdateAsync_ChangesSpot()
+        public async Task UpdateAsync_ModifiesSpot()
         {
-            var ctx = CreateContext(nameof(UpdateAsync_ChangesSpot));
-            ctx.VacationSpots.Add(new VacationSpot { SpotId = 2, Title = "Old" });
-            await ctx.SaveChangesAsync();
+            var spot = new VacationSpot { SpotId = 300, Title = "Old Name" };
+            _context.VacationSpots.Add(spot);
+            await _context.SaveChangesAsync();
 
-            var svc = new VacationSpotService(ctx);
-            var existing = new VacationSpot { SpotId = 2, Title = "Updated" };
-            await svc.UpdateAsync(existing);
+            spot.Title = "New Name";
+            await _vacationSpotService.UpdateAsync(spot);
 
-            var fromDb = await ctx.VacationSpots.FindAsync(2);
-            Assert.Equal("Updated", fromDb.Title);
-        }
-
-        [Fact]
-        public async Task DeleteAsync_RemovesSpotIfExists()
-        {
-            var ctx = CreateContext(nameof(DeleteAsync_RemovesSpotIfExists));
-            ctx.VacationSpots.Add(new VacationSpot { SpotId = 3, Title = "ToDelete" });
-            await ctx.SaveChangesAsync();
-
-            var svc = new VacationSpotService(ctx);
-            await svc.DeleteAsync(3);
-
-            Assert.Null(await ctx.VacationSpots.FindAsync(3));
-        }
-
-        [Fact]
-        public async Task GetByLocationAsync_FiltersBySubstring()
-        {
-            var ctx = CreateContext(nameof(GetByLocationAsync_FiltersBySubstring));
-            ctx.VacationSpots.AddRange(
-                new VacationSpot { SpotId = 1, Location = "Beachside" },
-                new VacationSpot { SpotId = 2, Location = "Mountain" }
-            );
-            ctx.Images.Add(new Image { ImageId = 1, SpotId = 1, ImageUrl = "/i.jpg" });
-            await ctx.SaveChangesAsync();
-
-            var svc = new VacationSpotService(ctx);
-            var result = await svc.GetByLocationAsync("Beach");
-
-            var spot = Assert.Single(result);
-            Assert.Equal(1, spot.SpotId);
-            Assert.Single(spot.Images);
-        }
-
-        [Fact]
-        public async Task GetAvailableSpotsAsync_ExcludesBooked()
-        {
-            var ctx = CreateContext(nameof(GetAvailableSpotsAsync_ExcludesBooked));
-            ctx.VacationSpots.AddRange(
-                new VacationSpot { SpotId = 1, Title = "A" },
-                new VacationSpot { SpotId = 2, Title = "B" }
-            );
-            ctx.Bookings.Add(new Booking
-            {
-                BookingId = 1,
-                SpotId = 1,
-                StartDate = DateTime.Today,
-                EndDate = DateTime.Today.AddDays(2)
-            });
-            await ctx.SaveChangesAsync();
-
-            var svc = new VacationSpotService(ctx);
-            var avail = await svc.GetAvailableSpotsAsync(
-                DateTime.Today.AddDays(1),
-                DateTime.Today.AddDays(3));
-
-            Assert.Single(avail);
-            Assert.Equal(2, avail.First().SpotId);
+            var updated = await _context.VacationSpots.FindAsync(300);
+            Assert.Equal("New Name", updated.Title);
         }
     }
-}*/
+}

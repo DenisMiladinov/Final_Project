@@ -1,88 +1,100 @@
-﻿/*using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Xunit;
 using Moq;
-using Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 using Services.Services;
+using Models;
+using Models.ViewModels;
+using System.Threading.Tasks;
 using Server.Controllers;
-using Xunit;
 
 namespace UnitTests.Controllers
 {
     public class ReviewControllerTests
     {
-        private ReviewController CreateController(
-            Mock<IReviewService> mockSvc,
-            string userId = "user1",
-            bool isAdmin = false)
+        private readonly Mock<IReviewService> _reviewServiceMock;
+        private readonly Mock<IVacationSpotService> _vacationSpotServiceMock;
+        private readonly ReviewController _controller;
+
+        public ReviewControllerTests()
         {
-            var controller = new ReviewController(mockSvc.Object);
+            _reviewServiceMock = new Mock<IReviewService>();
+            _vacationSpotServiceMock = new Mock<IVacationSpotService>();
 
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId),
-                new Claim(ClaimTypes.Name, userId)
-            };
-            if (isAdmin)
-            {
-                var list = new List<Claim>(claims)
-                {
-                    new Claim(ClaimTypes.Role, "Admin")
-                };
-                claims = list.ToArray();
-            }
+            _controller = new ReviewController(_reviewServiceMock.Object, _vacationSpotServiceMock.Object);
+        }
 
-            var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuth"));
-            controller.ControllerContext = new ControllerContext
+        private void SetUserIdentity(string userId)
+        {
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId)
+            }, "mock"));
+
+            _controller.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext { User = user }
             };
-            return controller;
         }
 
         [Fact]
-        public async Task Add_SetsUserIdAndCallsService_ThenRedirects()
+        public async Task Add_ReturnsRedirect_WhenModelIsValid()
         {
-            var mockSvc = new Mock<IReviewService>();
-            var review = new Review
+            // Arrange
+            SetUserIdentity("user123");
+            var vm = new ReviewViewModel
             {
                 SpotId = 5,
                 Rating = 4,
-                Comment = "Great!"
+                Comment = "Good place"
             };
 
-            var controller = CreateController(mockSvc, userId: "u123");
-            var result = await controller.Add(review) as RedirectToActionResult;
+            _controller.ModelState.Clear();
 
-            mockSvc.Verify(s =>
-                s.AddReviewAsync(It.Is<Review>(r =>
-                    r.SpotId == 5 &&
-                    r.UserId == "u123" &&
-                    r.Rating == 4 &&
-                    r.Comment == "Great!"
-                )), Times.Once);
+            // Act
+            var result = await _controller.Add(vm);
 
-            Assert.NotNull(result);
-            Assert.Equal("Details", result.ActionName);
-            Assert.Equal("VacationSpot", result.ControllerName);
-            Assert.Equal(5, result.RouteValues["id"]);
+            // Assert
+            var redirect = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Details", redirect.ActionName);
+            Assert.Equal("VacationSpot", redirect.ControllerName);
+            Assert.Equal(5, redirect.RouteValues["id"]);
         }
 
         [Fact]
-        public async Task Delete_AsAdmin_CallsServiceAndRedirects()
+        public async Task Add_ReturnsDetailsView_WhenModelIsInvalid()
         {
-            var mockSvc = new Mock<IReviewService>();
-            var controller = CreateController(mockSvc, userId: "admin", isAdmin: true);
+            // Arrange
+            _controller.ModelState.AddModelError("Comment", "Required");
 
-            var result = await controller.Delete(id: 7, spotId: 9) as RedirectToActionResult;
+            var vm = new ReviewViewModel { SpotId = 10 };
 
-            mockSvc.Verify(s => s.DeleteReviewAsync(7), Times.Once);
+            _vacationSpotServiceMock
+                .Setup(s => s.BuildDetailsViewModelAsync(10))
+                .ReturnsAsync(new VacationSpotDetailsViewModel());
 
-            Assert.NotNull(result);
-            Assert.Equal("Details", result.ActionName);
-            Assert.Equal("VacationSpot", result.ControllerName);
-            Assert.Equal(9, result.RouteValues["id"]);
+            // Act
+            var result = await _controller.Add(vm);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Details", viewResult.ViewName);
+        }
+
+        [Fact]
+        public async Task Delete_RedirectsToDetailsAfterDelete()
+        {
+            // Act
+            var result = await _controller.Delete(1, 99);
+
+            // Assert
+            _reviewServiceMock.Verify(r => r.DeleteReviewAsync(1), Times.Once);
+
+            var redirect = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Details", redirect.ActionName);
+            Assert.Equal("VacationSpot", redirect.ControllerName);
+            Assert.Equal(99, redirect.RouteValues["id"]);
         }
     }
-}*/
+}

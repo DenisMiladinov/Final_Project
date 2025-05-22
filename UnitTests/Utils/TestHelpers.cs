@@ -1,51 +1,52 @@
-﻿// File: UnitTests/Utils/TestHelpers.cs
-/*using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Models;
 using Moq;
+using System.Collections.Generic;
+using System.Security.Claims;
 
-namespace UnitTests.Utils
+namespace UnitTests
 {
     public static class TestHelpers
     {
-        public static Mock<UserManager<TUser>> MockUserManager<TUser>() where TUser : class
+        public static UserManager<ApplicationUser> GetMockUserManager()
         {
-            var store = new Mock<IUserStore<TUser>>();
-            return new Mock<UserManager<TUser>>(
-                store.Object,
-                null,
-                null,
-                new IUserValidator<TUser>[0],
-                new IPasswordValidator<TUser>[0],
-                null,
-                null,
-                null,
-                null
+            var store = new Mock<IUserStore<ApplicationUser>>();
+            var mgr = new Mock<UserManager<ApplicationUser>>(
+                store.Object, null, null, null, null, null, null, null, null
             );
+
+            return mgr.Object;
         }
 
-        public static ControllerContext GetControllerContext(string userId, params string[] roles)
+        public static ClaimsPrincipal GetMockUser(string userId)
         {
-            var claims = new List<Claim>
+            return new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userId),
-                new Claim(ClaimTypes.Name, userId)
-            };
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
+                new Claim(ClaimTypes.NameIdentifier, userId)
+            }, "mock"));
+        }
 
-            var identity = new ClaimsIdentity(claims, "TestAuthType");
-            var user = new ClaimsPrincipal(identity);
-
-            var httpContext = new DefaultHttpContext { User = user };
-
+        public static ControllerContext GetMockControllerContext(string userId)
+        {
             return new ControllerContext
             {
-                HttpContext = httpContext
+                HttpContext = new DefaultHttpContext
+                {
+                    User = GetMockUser(userId)
+                }
             };
         }
+
+        public static ApplicationDbContext GetInMemoryDbContext(string dbName)
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            return new ApplicationDbContext(options);
+        }
     }
-}*/
+}

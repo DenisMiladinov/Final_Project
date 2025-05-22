@@ -1,126 +1,69 @@
-﻿/*using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Xunit;
 using Moq;
-using Models;
-using Server.Controllers;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Services.Services;
-using UnitTests.Utils;
-using Xunit;
+using Server.Controllers;
+using Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace UnitTests.Controllers
 {
     public class BookingControllerTests
     {
+        private readonly Mock<IBookingService> _bookingServiceMock;
+        private readonly Mock<IVacationSpotService> _spotServiceMock;
+        private readonly Mock<UserManager<ApplicationUser>> _userManagerMock;
+        private readonly BookingController _controller;
+
+        public BookingControllerTests()
+        {
+            _bookingServiceMock = new Mock<IBookingService>();
+            _spotServiceMock = new Mock<IVacationSpotService>();
+
+            var store = new Mock<IUserStore<ApplicationUser>>();
+            _userManagerMock = new Mock<UserManager<ApplicationUser>>(store.Object, null, null, null, null, null, null, null, null);
+
+            var configMock = new Mock<IConfiguration>();
+
+            _controller = new BookingController(
+                _bookingServiceMock.Object,
+                _spotServiceMock.Object,
+                _userManagerMock.Object,
+                configMock.Object
+            );
+        }
+
         [Fact]
         public async Task MyBookings_ReturnsViewWithUserBookings()
         {
-            var bookingServiceMock = new Mock<IBookingService>();
-            bookingServiceMock
-                .Setup(s => s.GetBookingsByUserIdAsync("user1"))
-                .ReturnsAsync(new List<Booking> { new Booking { BookingId = 1 } });
-            var spotServiceMock = new Mock<IVacationSpotService>();
-            var userManagerMock = TestHelpers.MockUserManager<ApplicationUser>().Object;
-            var configMock = new Mock<IConfiguration>().Object;
-            var controller = new BookingController(
-                bookingServiceMock.Object,
-                spotServiceMock.Object,
-                userManagerMock,
-                configMock)
+            // Arrange: mock identity
+            var userId = "test-user-id";
+            var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-                ControllerContext = TestHelpers.GetControllerContext("user1")
-            };
-            var result = await controller.MyBookings() as ViewResult;
-            var model = Assert.IsAssignableFrom<IEnumerable<Booking>>(result.Model);
-            Assert.Single(model);
-        }
+                new Claim(ClaimTypes.NameIdentifier, userId)
+            }, "mock"));
 
-        [Fact]
-        public async Task Create_Post_InvalidModel_ReturnsView()
-        {
-            var bookingServiceMock = new Mock<IBookingService>();
-            var spotServiceMock = new Mock<IVacationSpotService>();
-            var userManagerMock = TestHelpers.MockUserManager<ApplicationUser>().Object;
-            var configMock = new Mock<IConfiguration>().Object;
-            var controller = new BookingController(
-                bookingServiceMock.Object,
-                spotServiceMock.Object,
-                userManagerMock,
-                configMock)
+            _controller.ControllerContext = new ControllerContext
             {
-                ControllerContext = TestHelpers.GetControllerContext("user1")
+                HttpContext = new DefaultHttpContext { User = claimsPrincipal }
             };
-            controller.ModelState.AddModelError("Risk", "Error");
-            var result = await controller.Create(new Booking()) as ViewResult;
-            Assert.IsType<ViewResult>(result);
-        }
 
-        [Fact]
-        public async Task Cancel_Post_RedirectsToMyBookings()
-        {
-            var bookingServiceMock = new Mock<IBookingService>();
-            var spotServiceMock = new Mock<IVacationSpotService>();
-            var userManagerMock = TestHelpers.MockUserManager<ApplicationUser>().Object;
-            var configMock = new Mock<IConfiguration>().Object;
-            var controller = new BookingController(
-                bookingServiceMock.Object,
-                spotServiceMock.Object,
-                userManagerMock,
-                configMock)
-            {
-                ControllerContext = TestHelpers.GetControllerContext("user1")
-            };
-            var result = await controller.Cancel(1) as RedirectToActionResult;
-            Assert.Equal("MyBookings", result.ActionName);
-        }
+            var mockBookings = new List<Booking> { new Booking(), new Booking() };
+            _bookingServiceMock.Setup(s => s.GetBookingsByUserIdAsync(userId)).ReturnsAsync(mockBookings);
 
-        [Fact]
-        public async Task Edit_Get_ReturnsViewWithBooking()
-        {
-            var booking = new Booking { BookingId = 2 };
-            var bookingServiceMock = new Mock<IBookingService>();
-            bookingServiceMock
-                .Setup(s => s.GetByIdAsync(2))
-                .ReturnsAsync(booking);
-            var spotServiceMock = new Mock<IVacationSpotService>();
-            var userManagerMock = TestHelpers.MockUserManager<ApplicationUser>().Object;
-            var configMock = new Mock<IConfiguration>().Object;
-            var controller = new BookingController(
-                bookingServiceMock.Object,
-                spotServiceMock.Object,
-                userManagerMock,
-                configMock)
-            {
-                ControllerContext = TestHelpers.GetControllerContext("admin1", "Admin")
-            };
-            var result = await controller.Edit(2) as ViewResult;
-            Assert.Equal(booking, result.Model);
-        }
+            // Act
+            var result = await _controller.MyBookings();
 
-        [Fact]
-        public async Task DeleteConfirmed_DeletesBookingAndRedirects()
-        {
-            var booking = new Booking { BookingId = 3 };
-            var bookingServiceMock = new Mock<IBookingService>();
-            bookingServiceMock
-                .Setup(s => s.GetByIdAsync(3))
-                .ReturnsAsync(booking);
-            var spotServiceMock = new Mock<IVacationSpotService>();
-            var userManagerMock = TestHelpers.MockUserManager<ApplicationUser>().Object;
-            var configMock = new Mock<IConfiguration>().Object;
-            var controller = new BookingController(
-                bookingServiceMock.Object,
-                spotServiceMock.Object,
-                userManagerMock,
-                configMock)
-            {
-                ControllerContext = TestHelpers.GetControllerContext("admin1", "Admin")
-            };
-            var result = await controller.DeleteConfirmed(3) as RedirectToActionResult;
-            Assert.Equal("ManageBookings", result.ActionName);
-            Assert.Equal("Admin", result.ControllerName);
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<IEnumerable<Booking>>(viewResult.Model);
+            Assert.Equal(2, model.Count());
         }
     }
-}*/
+}

@@ -65,6 +65,15 @@
                         <span asp-validation-for="ImageFile" class="text-danger"></span>
                     </div>
 
+                    <div class="mb-3">
+                        <label asp-for="ImageFiles" class="form-label">Images</label>
+                        <input asp-for="ImageFiles"
+                               type="file"
+                               class="form-control"
+                               multiple />
+                        <span asp-validation-for="ImageFiles" class="text-danger"></span>
+                    </div>
+
                     <button type="submit" class="btn btn-primary me-2">Create</button>
                     <a asp-controller="Admin" asp-action="Spots" class="btn btn-secondary">Cancel</a>
                 </form>

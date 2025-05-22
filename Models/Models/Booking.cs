@@ -29,7 +29,7 @@ namespace Models
         [ForeignKey("Payment")]
         public int PaymentId { get; set; }
         public Payment Payment { get; set; }
-        public string StripeSessionId { get; set; }
+        public string? StripeSessionId { get; set; }
         public bool IsCancelled { get; set; } = false;
         public DateTime CreatedAt { get; set; }
     }

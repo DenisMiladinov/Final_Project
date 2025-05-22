@@ -1,105 +1,74 @@
-﻿/*using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Xunit;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Services.Repositories;
-using Xunit;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
+using System;
 
 namespace UnitTests.Repositories
 {
     public class VacationSpotRepositoryTests
     {
-        private ApplicationDbContext CreateContext(string dbName)
+        private readonly ApplicationDbContext _context;
+        private readonly VacationSpotRepository _repository;
+
+        public VacationSpotRepositoryTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(dbName)
+                .UseInMemoryDatabase("VacationSpotRepoTests")
                 .Options;
-            return new ApplicationDbContext(options);
+
+            _context = new ApplicationDbContext(options);
+            _repository = new VacationSpotRepository(_context);
         }
 
         [Fact]
-        public async Task GetByLocationAsync_ReturnsOnlyMatchingSpots_WithImages()
+        public async Task GetByLocationAsync_ReturnsMatchingSpots()
         {
-            var context = CreateContext(nameof(GetByLocationAsync_ReturnsOnlyMatchingSpots_WithImages));
-            var spot1 = new VacationSpot
-            {
-                SpotId = 1,
-                Title = "Beachside",
-                Location = "Sunny Beach"
-            };
-            var spot2 = new VacationSpot
-            {
-                SpotId = 2,
-                Title = "Mountain Cabin",
-                Location = "High Mountains"
-            };
-            context.VacationSpots.AddRange(spot1, spot2);
-            context.Images.Add(new Image { ImageId = 1, SpotId = 1, ImageUrl = "/img1.jpg" });
-            await context.SaveChangesAsync();
+            _context.VacationSpots.Add(new VacationSpot { SpotId = 1, Location = "Paris" });
+            _context.VacationSpots.Add(new VacationSpot { SpotId = 2, Location = "paris central" });
+            _context.VacationSpots.Add(new VacationSpot { SpotId = 3, Location = "Berlin" });
+            await _context.SaveChangesAsync();
 
-            var repo = new VacationSpotRepository(context);
-            var result = await repo.GetByLocationAsync("Beach");
-
-            Assert.Single(result);
-            var returned = result.First();
-            Assert.Equal(1, returned.SpotId);
-            Assert.Single(returned.Images);
-        }
-
-        [Fact]
-        public async Task GetAvailableSpotsAsync_NoBookings_ReturnsAllSpots()
-        {
-            var context = CreateContext(nameof(GetAvailableSpotsAsync_NoBookings_ReturnsAllSpots));
-            context.VacationSpots.Add(new VacationSpot { SpotId = 1, Title = "A" });
-            context.VacationSpots.Add(new VacationSpot { SpotId = 2, Title = "B" });
-            await context.SaveChangesAsync();
-
-            var repo = new VacationSpotRepository(context);
-            var result = await repo.GetAvailableSpotsAsync(
-                DateTime.Today, DateTime.Today.AddDays(1));
+            var result = await _repository.GetByLocationAsync("paris");
 
             Assert.Equal(2, result.Count());
         }
 
         [Fact]
-        public async Task GetAvailableSpotsAsync_ExcludesOccupiedSpots()
+        public async Task GetAvailableSpotsAsync_ReturnsOnlyAvailableSpots()
         {
-            var context = CreateContext(nameof(GetAvailableSpotsAsync_ExcludesOccupiedSpots));
-            var spot1 = new VacationSpot { SpotId = 1, Title = "A" };
-            var spot2 = new VacationSpot { SpotId = 2, Title = "B" };
-            context.VacationSpots.AddRange(spot1, spot2);
-            context.Bookings.Add(new Booking
+            var spotWithConflict = new VacationSpot
             {
-                BookingId = 1,
                 SpotId = 1,
-                StartDate = DateTime.Today,
-                EndDate = DateTime.Today.AddDays(2)
-            });
-            await context.SaveChangesAsync();
+                Bookings = new List<Booking>
+                {
+                    new Booking
+                    {
+                        StartDate = new DateTime(2025, 6, 10),
+                        EndDate = new DateTime(2025, 6, 15)
+                    }
+                }
+            };
 
-            var repo = new VacationSpotRepository(context);
-            var result = await repo.GetAvailableSpotsAsync(
-                DateTime.Today.AddDays(1), DateTime.Today.AddDays(3));
+            var spotAvailable = new VacationSpot
+            {
+                SpotId = 2,
+                Bookings = new List<Booking>()
+            };
+
+            _context.VacationSpots.AddRange(spotWithConflict, spotAvailable);
+            await _context.SaveChangesAsync();
+
+            var result = await _repository.GetAvailableSpotsAsync(
+                new DateTime(2025, 6, 12),
+                new DateTime(2025, 6, 14)
+            );
 
             Assert.Single(result);
             Assert.Equal(2, result.First().SpotId);
         }
-
-        [Fact]
-        public async Task GetAllAsync_ReturnsAllSpots()
-        {
-            var context = CreateContext(nameof(GetAllAsync_ReturnsAllSpots));
-            context.VacationSpots.AddRange(
-                new VacationSpot { SpotId = 1, Title = "X" },
-                new VacationSpot { SpotId = 2, Title = "Y" }
-            );
-            await context.SaveChangesAsync();
-
-            var repo = new VacationSpotRepository(context);
-            var result = await repo.GetAllAsync();
-
-            Assert.Equal(2, result.Count());
-        }
     }
-}*/
+}

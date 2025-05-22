@@ -30,7 +30,7 @@
                             <td>@b.User?.UserName</td>
                             <td>@b.StartDate.ToString("yyyy-MM-dd")</td>
                             <td>@b.EndDate.ToString("yyyy-MM-dd")</td>
-                            <td class="text-end">@b.TotalPrice.ToString("C")</td>
+                            <td>@b.TotalPrice.ToString("0.00") lv</td
                             <td class="text-center">
                                 <a asp-action="EditBooking" asp-route-id="@b.BookingId" class="btn btn-sm btn-primary me-1">Edit</a>
                                 <a asp-action="DeleteBooking" asp-route-id="@b.BookingId" class="btn btn-sm btn-danger">Delete</a>

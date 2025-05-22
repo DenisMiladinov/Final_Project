@@ -28,7 +28,7 @@
                         <tr>
                             <td>@spot.Title</td>
                             <td>@spot.Location</td>
-                            <td class="text-end">@string.Format("{0:C}", spot.PricePerNight)</td>
+                            <td>@spot.PricePerNight.ToString("0.00") lv</td>
                             <td class="text-center">
                                 <a asp-controller="Admin"
                                    asp-action="EditSpot"

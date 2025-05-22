@@ -100,13 +100,35 @@ namespace Server.Controllers
 
             if (vm.ImageFile != null && vm.ImageFile.Length > 0)
             {
-                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "assets/Spots");
                 Directory.CreateDirectory(uploadsFolder);
                 var fileName = Guid.NewGuid() + Path.GetExtension(vm.ImageFile.FileName);
                 var filePath = Path.Combine(uploadsFolder, fileName);
                 using var stream = new FileStream(filePath, FileMode.Create);
                 await vm.ImageFile.CopyToAsync(stream);
-                spot.ImageUrl = $"/uploads/{fileName}";
+                spot.ImageUrl = $"/assets/Spots/{fileName}";
+            }
+
+            if (vm.ImageFiles != null && vm.ImageFiles.Any())
+            {
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "assets/Spots");
+                Directory.CreateDirectory(uploadsFolder);
+
+                foreach (var file in vm.ImageFiles)
+                {
+                    if (file.Length <= 0) continue;
+                    var ext = Path.GetExtension(file.FileName);
+                    var fileName = $"{Guid.NewGuid()}{ext}";
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using var stream = new FileStream(filePath, FileMode.Create);
+                    await file.CopyToAsync(stream);
+
+                    spot.Images.Add(new Image
+                    {
+                        ImageUrl = $"/assets/Spots/{fileName}"
+                    });
+                }
             }
 
             await _spotService.CreateAsync(spot);

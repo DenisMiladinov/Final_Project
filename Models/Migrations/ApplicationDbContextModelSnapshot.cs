@@ -255,7 +255,6 @@ namespace Models.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("StripeSessionId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")

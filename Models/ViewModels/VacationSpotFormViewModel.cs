@@ -12,14 +12,16 @@ namespace Models.ViewModels
 
         [Required, StringLength(200)]
         public string Title { get; set; }
-
         public string? Description { get; set; }
         public string? Location { get; set; }
 
         [Required, Range(0.01, double.MaxValue)]
         public decimal PricePerNight { get; set; }
-
+        public string? ImageUrl { get; set; }
         public IFormFile? ImageFile { get; set; }
+
+        [Display(Name = "Images")]
+        public List<IFormFile> ImageFiles { get; set; } = new();
 
         [Display(Name = "Categories")]
         [Required(ErrorMessage = "Pick at least one category")]

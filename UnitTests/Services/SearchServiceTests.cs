@@ -1,134 +1,119 @@
-﻿/*using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Xunit;
 using Moq;
-using Xunit;
-using Models;
-using Services.Repositories;
 using Services.Services;
+using Services.Repositories;
+using Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System;
+using System.Linq;
 
 namespace UnitTests.Services
 {
     public class SearchServiceTests
     {
-        private SearchService CreateService(IEnumerable<VacationSpot> spots)
+        private readonly Mock<IVacationSpotRepository> _vacationRepoMock;
+        private readonly SearchService _searchService;
+
+        public SearchServiceTests()
         {
-            var mockRepo = new Mock<IVacationSpotRepository>();
-            mockRepo.Setup(r => r.GetAllAsync())
-                    .ReturnsAsync(spots);
-            return new SearchService(mockRepo.Object);
+            _vacationRepoMock = new Mock<IVacationSpotRepository>();
+            _searchService = new SearchService(_vacationRepoMock.Object);
         }
 
         [Fact]
-        public async Task SearchAsync_NoFilters_ReturnsAllSpots()
+        public async Task SearchAsync_FiltersByLocation()
         {
-            var spot1 = new VacationSpot { SpotId = 1, Location = "A", PricePerNight = 100m, Bookings = new List<Booking>() };
-            var spot2 = new VacationSpot { SpotId = 2, Location = "B", PricePerNight = 200m, Bookings = new List<Booking>() };
-            var svc = CreateService(new[] { spot1, spot2 });
+            var spots = new List<VacationSpot>
+            {
+                new VacationSpot { Location = "Paris" },
+                new VacationSpot { Location = "Berlin" },
+                new VacationSpot { Location = "paris central" }
+            };
 
-            var result = await svc.SearchAsync(null, null, null, null, null);
+            _vacationRepoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(spots);
+
+            var result = await _searchService.SearchAsync("paris", null, null, null, null);
 
             Assert.Equal(2, result.Count());
         }
 
         [Fact]
-        public async Task SearchAsync_ByLocation_IsCaseInsensitive()
+        public async Task SearchAsync_FiltersByMinPrice()
         {
-            var spot1 = new VacationSpot { SpotId = 1, Location = "Beach", PricePerNight = 100m, Bookings = new List<Booking>() };
-            var spot2 = new VacationSpot { SpotId = 2, Location = "Mountain", PricePerNight = 200m, Bookings = new List<Booking>() };
-            var svc = CreateService(new[] { spot1, spot2 });
-
-            var result = await svc.SearchAsync("beach", null, null, null, null);
-
-            Assert.Single(result);
-            Assert.Equal(1, result.First().SpotId);
-        }
-
-        [Fact]
-        public async Task SearchAsync_ByMinPrice_FiltersBelow()
-        {
-            var spot1 = new VacationSpot { SpotId = 1, PricePerNight = 50m, Bookings = new List<Booking>() };
-            var spot2 = new VacationSpot { SpotId = 2, PricePerNight = 150m, Bookings = new List<Booking>() };
-            var svc = CreateService(new[] { spot1, spot2 });
-
-            var result = await svc.SearchAsync(null, 100m, null, null, null);
-
-            Assert.Single(result);
-            Assert.Equal(2, result.First().SpotId);
-        }
-
-        [Fact]
-        public async Task SearchAsync_ByMaxPrice_FiltersAbove()
-        {
-            var spot1 = new VacationSpot { SpotId = 1, PricePerNight = 50m, Bookings = new List<Booking>() };
-            var spot2 = new VacationSpot { SpotId = 2, PricePerNight = 150m, Bookings = new List<Booking>() };
-            var svc = CreateService(new[] { spot1, spot2 });
-
-            var result = await svc.SearchAsync(null, null, 100m, null, null);
-
-            Assert.Single(result);
-            Assert.Equal(1, result.First().SpotId);
-        }
-
-        [Fact]
-        public async Task SearchAsync_ByDateAvailability_ExcludesOverlapping()
-        {
-            var spotFree = new VacationSpot
+            var spots = new List<VacationSpot>
             {
-                SpotId = 1,
-                PricePerNight = 100m,
-                Bookings = new List<Booking>()
+                new VacationSpot { PricePerNight = 100 },
+                new VacationSpot { PricePerNight = 200 }
             };
-            var spotBusy = new VacationSpot
+
+            _vacationRepoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(spots);
+
+            var result = await _searchService.SearchAsync(null, 150, null, null, null);
+
+            Assert.Single(result);
+            Assert.Equal(200, result.First().PricePerNight);
+        }
+
+        [Fact]
+        public async Task SearchAsync_FiltersByMaxPrice()
+        {
+            var spots = new List<VacationSpot>
             {
-                SpotId = 2,
-                PricePerNight = 100m,
-                Bookings = new List<Booking>
+                new VacationSpot { PricePerNight = 100 },
+                new VacationSpot { PricePerNight = 200 }
+            };
+
+            _vacationRepoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(spots);
+
+            var result = await _searchService.SearchAsync(null, null, 150, null, null);
+
+            Assert.Single(result);
+            Assert.Equal(100, result.First().PricePerNight);
+        }
+
+        [Fact]
+        public async Task SearchAsync_FiltersByDateAvailability()
+        {
+            var startDate = new DateTime(2025, 6, 10);
+            var endDate = new DateTime(2025, 6, 15);
+
+            var spots = new List<VacationSpot>
+            {
+                new VacationSpot
                 {
-                    new Booking
+                    Bookings = new List<Booking> // not available
                     {
-                        BookingId = 1,
-                        SpotId = 2,
-                        StartDate = DateTime.Today,
-                        EndDate   = DateTime.Today.AddDays(2)
+                        new Booking { StartDate = new DateTime(2025, 6, 12), EndDate = new DateTime(2025, 6, 20) }
                     }
+                },
+                new VacationSpot
+                {
+                    Bookings = new List<Booking>() // available
                 }
             };
-            var svc = CreateService(new[] { spotFree, spotBusy });
 
-            var start = DateTime.Today.AddDays(1);
-            var end = DateTime.Today.AddDays(3);
-            var result = await svc.SearchAsync(null, null, null, start, end);
+            _vacationRepoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(spots);
+
+            var result = await _searchService.SearchAsync(null, null, null, startDate, endDate);
 
             Assert.Single(result);
-            Assert.Equal(1, result.First().SpotId);
         }
 
         [Fact]
-        public async Task SearchAsync_PartialDates_NoDateFiltering()
+        public async Task SearchAsync_ReturnsAll_WhenNoFiltersApplied()
         {
-            var spot1 = new VacationSpot
+            var spots = new List<VacationSpot>
             {
-                SpotId = 1,
-                PricePerNight = 100m,
-                Bookings = new List<Booking>
-                {
-                    new Booking
-                    {
-                        BookingId = 1,
-                        SpotId = 1,
-                        StartDate = DateTime.Today,
-                        EndDate = DateTime.Today.AddDays(2)
-                    }
-                }
+                new VacationSpot(),
+                new VacationSpot()
             };
-            var svc = CreateService(new[] { spot1 });
 
-            // only startDate provided => should ignore date filter
-            var result = await svc.SearchAsync(null, null, null, DateTime.Today, null);
+            _vacationRepoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(spots);
 
-            Assert.Single(result);
+            var result = await _searchService.SearchAsync(null, null, null, null, null);
+
+            Assert.Equal(2, result.Count());
         }
     }
-}*/
+}

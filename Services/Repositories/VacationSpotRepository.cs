@@ -9,11 +9,20 @@ namespace Services.Repositories
 
         public async Task<IEnumerable<VacationSpot>> GetByLocationAsync(string location)
         {
+            if (string.IsNullOrEmpty(location))
+                return await _dbSet
+                    .Include(v => v.Images)
+                    .ToListAsync();
+
+            var search = location.ToLowerInvariant();
+
             return await _dbSet
-                .Where(v => v.Location.Contains(location))
+                .Where(v => v.Location != null
+                    && v.Location.ToLowerInvariant().Contains(search))
                 .Include(v => v.Images)
                 .ToListAsync();
         }
+
 
         public async Task<IEnumerable<VacationSpot>> GetAvailableSpotsAsync(DateTime startDate, DateTime endDate)
         {

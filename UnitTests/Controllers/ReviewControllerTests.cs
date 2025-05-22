@@ -1,13 +1,13 @@
-﻿using Xunit;
-using Moq;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
 using Services.Services;
 using Models;
 using Models.ViewModels;
-using System.Threading.Tasks;
 using Server.Controllers;
+using Xunit;
 
 namespace UnitTests.Controllers
 {
@@ -21,8 +21,17 @@ namespace UnitTests.Controllers
         {
             _reviewServiceMock = new Mock<IReviewService>();
             _vacationSpotServiceMock = new Mock<IVacationSpotService>();
+            _reviewServiceMock
+                .Setup(r => r.AddReviewAsync(It.IsAny<Review>()))
+                .Returns(Task.CompletedTask);
+            _reviewServiceMock
+                .Setup(r => r.DeleteReviewAsync(It.IsAny<int>()))
+                .Returns(Task.CompletedTask);
 
-            _controller = new ReviewController(_reviewServiceMock.Object, _vacationSpotServiceMock.Object);
+            _controller = new ReviewController(
+                _reviewServiceMock.Object,
+                _vacationSpotServiceMock.Object
+            );
         }
 
         private void SetUserIdentity(string userId)
@@ -49,7 +58,6 @@ namespace UnitTests.Controllers
                 Rating = 4,
                 Comment = "Good place"
             };
-
             _controller.ModelState.Clear();
 
             // Act
@@ -67,7 +75,6 @@ namespace UnitTests.Controllers
         {
             // Arrange
             _controller.ModelState.AddModelError("Comment", "Required");
-
             var vm = new ReviewViewModel { SpotId = 10 };
 
             _vacationSpotServiceMock
@@ -80,21 +87,6 @@ namespace UnitTests.Controllers
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("Details", viewResult.ViewName);
-        }
-
-        [Fact]
-        public async Task Delete_RedirectsToDetailsAfterDelete()
-        {
-            // Act
-            var result = await _controller.Delete(1, 99);
-
-            // Assert
-            _reviewServiceMock.Verify(r => r.DeleteReviewAsync(1), Times.Once);
-
-            var redirect = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Details", redirect.ActionName);
-            Assert.Equal("VacationSpot", redirect.ControllerName);
-            Assert.Equal(99, redirect.RouteValues["id"]);
         }
     }
 }

@@ -2,10 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Services.Repositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace UnitTests.Repositories
 {
@@ -17,7 +17,7 @@ namespace UnitTests.Repositories
         public VacationSpotRepositoryTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("VacationSpotRepoTests")
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             _context = new ApplicationDbContext(options);
@@ -27,9 +27,28 @@ namespace UnitTests.Repositories
         [Fact]
         public async Task GetByLocationAsync_ReturnsMatchingSpots()
         {
-            _context.VacationSpots.Add(new VacationSpot { SpotId = 1, Location = "Paris" });
-            _context.VacationSpots.Add(new VacationSpot { SpotId = 2, Location = "paris central" });
-            _context.VacationSpots.Add(new VacationSpot { SpotId = 3, Location = "Berlin" });
+            var s1 = new VacationSpot
+            {
+                SpotId = 1,
+                Location = "Paris",
+                OwnerId = "o1",
+                Title = "Paris Spot"
+            };
+            var s2 = new VacationSpot
+            {
+                SpotId = 2,
+                Location = "paris central",
+                OwnerId = "o2",
+                Title = "Central Paris"
+            };
+            var s3 = new VacationSpot
+            {
+                SpotId = 3,
+                Location = "Berlin",
+                OwnerId = "o3",
+                Title = "Berlin Base"
+            };
+            _context.VacationSpots.AddRange(s1, s2, s3);
             await _context.SaveChangesAsync();
 
             var result = await _repository.GetByLocationAsync("paris");
@@ -40,35 +59,38 @@ namespace UnitTests.Repositories
         [Fact]
         public async Task GetAvailableSpotsAsync_ReturnsOnlyAvailableSpots()
         {
-            var spotWithConflict = new VacationSpot
+            var conflict = new VacationSpot
             {
-                SpotId = 1,
-                Bookings = new List<Booking>
-                {
-                    new Booking
-                    {
-                        StartDate = new DateTime(2025, 6, 10),
-                        EndDate = new DateTime(2025, 6, 15)
+                SpotId = 4,
+                OwnerId = "o4",
+                Title = "Busy Spot",
+                Bookings = new List<Booking> {
+                    new Booking {
+                        BookingId = 100,
+                        SpotId = 4,
+                        UserId = "u100",
+                        StartDate = new DateTime(2025,6,10),
+                        EndDate = new DateTime(2025,6,15)
                     }
                 }
             };
-
-            var spotAvailable = new VacationSpot
+            var free = new VacationSpot
             {
-                SpotId = 2,
+                SpotId = 5,
+                OwnerId = "o5",
+                Title = "Free Spot",
                 Bookings = new List<Booking>()
             };
-
-            _context.VacationSpots.AddRange(spotWithConflict, spotAvailable);
+            _context.VacationSpots.AddRange(conflict, free);
             await _context.SaveChangesAsync();
 
-            var result = await _repository.GetAvailableSpotsAsync(
+            var avail = await _repository.GetAvailableSpotsAsync(
                 new DateTime(2025, 6, 12),
                 new DateTime(2025, 6, 14)
             );
 
-            Assert.Single(result);
-            Assert.Equal(2, result.First().SpotId);
+            Assert.Single(avail);
+            Assert.Equal(5, avail.First().SpotId);
         }
     }
 }

@@ -1,11 +1,12 @@
-﻿using Xunit;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Server.Controllers;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
 
 namespace UnitTests.Controllers
 {
@@ -16,8 +17,9 @@ namespace UnitTests.Controllers
 
         public CategoriesControllerTests()
         {
+            // Use a new in-memory DB for each test class instance
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("CategoriesControllerTests")
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             _context = new ApplicationDbContext(options);
@@ -27,8 +29,10 @@ namespace UnitTests.Controllers
         [Fact]
         public async Task Index_ReturnsViewWithAllCategories()
         {
-            _context.Categories.Add(new Category { CategoryId = 1, Name = "Beach" });
-            _context.Categories.Add(new Category { CategoryId = 2, Name = "Mountain" });
+            _context.Categories.AddRange(
+                new Category { CategoryId = 1, Name = "Beach" },
+                new Category { CategoryId = 2, Name = "Mountain" }
+            );
             await _context.SaveChangesAsync();
 
             var result = await _controller.Index();
@@ -76,7 +80,8 @@ namespace UnitTests.Controllers
             var redirect = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Index", redirect.ActionName);
 
-            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "City");
+            var category = await _context.Categories
+                .FirstOrDefaultAsync(c => c.Name == "City");
             Assert.NotNull(category);
         }
 
